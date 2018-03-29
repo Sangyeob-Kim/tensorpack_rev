@@ -114,6 +114,8 @@ def Conv2D(
         ret.variables = VariableHolder(W=W)
         if use_bias:
             ret.variables.b = b
+    print("Hello~")
+    return 0
     return ret
 
 
