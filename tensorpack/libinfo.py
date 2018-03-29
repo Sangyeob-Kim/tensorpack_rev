@@ -49,4 +49,4 @@ except ImportError:
     _HAS_TF = False
 
 
-__version__ = '0.8.5.rev'
+__version__ = '0.8.5.sangyeob_rev'
