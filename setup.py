@@ -23,7 +23,7 @@ reqfile = os.path.join(CURRENT_DIR, 'requirements.txt')
 req = [x.strip() for x in open(reqfile).readlines()]
 
 setup(
-    name='tensorpack_rev',
+    name='tensorpack',
     version=__version__,
     description='Neural Network Toolbox on TensorFlow',
     long_description=long_description,
