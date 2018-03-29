@@ -65,7 +65,7 @@ Dependencies:
 + TensorFlow >= 1.3.0 (Optional if you only want to use `tensorpack.dataflow` alone as a data processing library)
 ```
 # install git, then:
-pip install -U git+https://github.com/ppwwyyxx/tensorpack.git
+pip install -U git+https://github.com/Sangyeob-Kim/tensorpack_rev.git
 # or add `--user` to avoid system-wide installation.
 ```
 
