@@ -39,13 +39,10 @@ def Conv2D(
     """
     A wrapper around `tf.layers.Conv2D`.
     Some differences to maintain backward-compatibility:
-
     1. Default kernel initializer is variance_scaling_initializer(2.0).
     2. Default padding is 'same'.
     3. Support 'split' argument to do group conv.
-
     Variable Names:
-
     * ``W``: weights
     * ``b``: bias
     """
@@ -85,7 +82,7 @@ def Conv2D(
             "Not supported by group conv now!"
 
         out_channel = filters
-        #assert out_channel % split == 0
+        assert out_channel % split == 0
         assert dilation_rate == (1, 1) or get_tf_version_number() >= 1.5, 'TF>=1.5 required for group dilated conv'
 
         kernel_shape = shape2d(kernel_size)
@@ -103,17 +100,11 @@ def Conv2D(
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
         inputs = tf.split(inputs, split, channel_axis)
-        #print(inputs)
-        kernels = W
-        kernels = tf.transpose(kernels, perm=[0,1,3,2])
-        kernels = tf.split(W, out_channel, 3)
-        #print(kernels)
+        kernels = tf.split(W, split, 3)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
-        print(outputs)
-        conv = outputs#tf.concat(outputs, channel_axis)
-        #conv = tf.reduce_sum(outputs,channel_axis)
-        #print(conv)
+        conv = tf.concat(outputs, channel_axis)
+        print(conv)
         if activation is None:
             activation = tf.identity
         ret = activation(tf.nn.bias_add(conv, b, data_format=data_format) if use_bias else conv, name='output')
@@ -149,12 +140,9 @@ def Conv2DTranspose(
     """
     A wrapper around `tf.layers.Conv2DTranspose`.
     Some differences to maintain backward-compatibility:
-
     1. Default kernel initializer is variance_scaling_initializer(2.0).
     2. Default padding is 'same'
-
     Variable Names:
-
     * ``W``: weights
     * ``b``: bias
     """
