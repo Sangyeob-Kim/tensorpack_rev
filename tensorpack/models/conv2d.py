@@ -100,6 +100,7 @@ def Conv2D(
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
         inputs = tf.split(inputs, split, channel_axis)
+        print(inputs)
         kernels = tf.split(W, split, 3)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
