@@ -111,7 +111,7 @@ def Conv2D(
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
         #print(outputs)
-        #conv = tf.concat(outputs, channel_axis)
+        conv = outputs#tf.concat(outputs, channel_axis)
         #conv = tf.reduce_sum(outputs,channel_axis)
         #print(conv)
         if activation is None:
