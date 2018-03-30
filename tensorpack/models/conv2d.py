@@ -89,7 +89,7 @@ def Conv2D(
         assert dilation_rate == (1, 1) or get_tf_version_number() >= 1.5, 'TF>=1.5 required for group dilated conv'
 
         kernel_shape = shape2d(kernel_size)
-        filter_shape = kernel_shape + [in_channel / split, out_channel]
+        filter_shape = kernel_shape + [in_channel / in_channel, out_channel]
         stride = shape4d(strides, data_format=data_format)
 
         kwargs = dict(data_format=data_format)
