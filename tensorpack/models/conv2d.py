@@ -89,7 +89,7 @@ def Conv2D(
         assert dilation_rate == (1, 1) or get_tf_version_number() >= 1.5, 'TF>=1.5 required for group dilated conv'
 
         kernel_shape = shape2d(kernel_size)
-        filter_shape = kernel_shape + [in_channel / in_channel, out_channel]
+        filter_shape = kernel_shape + [in_channel / split, out_channel]
         stride = shape4d(strides, data_format=data_format)
 
         kwargs = dict(data_format=data_format)
@@ -102,16 +102,14 @@ def Conv2D(
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
-        inputs = tf.split(inputs, in_channel, channel_axis)
+        inputs = tf.split(inputs, split, channel_axis)
         #print(inputs)
         kernels = W
         kernels = tf.transpose(kernels, perm=[0,1,3,2])
-        kernels = tf.split(W, in_channel, 3)
-        print("\nkernel")
-        print(kernels)
+        kernels = tf.split(W, out_channel, 3)
+        #print(kernels)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
-        print("\noutput")
         print(outputs)
         conv = outputs#tf.concat(outputs, channel_axis)
         #conv = tf.reduce_sum(outputs,channel_axis)
