@@ -116,10 +116,12 @@ def Conv2D(
         #print(kernels)
         outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
+        print("\noutputs")
         print(outputs)
-        conv = outputs#tf.concat(outputs, channel_axis)
-        #conv = tf.reduce_sum(outputs,channel_axis)
-        #print(conv)
+        #conv = outputs#tf.concat(outputs, channel_axis)
+        conv = tf.reduce_sum(outputs,channel_axis)
+        print("\nconv")
+        print(conv)
         if activation is None:
             activation = tf.identity
         ret = activation(tf.nn.bias_add(conv, b, data_format=data_format) if use_bias else conv, name='output')
