@@ -99,19 +99,20 @@ def Conv2D(
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
-        inputs_rev = tf.split(inputs, in_channel, channel_axis)
+        #inputs_rev = tf.split(inputs, in_channel, channel_axis)
+        #inputs = tf.split(inputs, in_channel, channel_axis)
         inputs = tf.split(inputs, split, channel_axis)
         
-        print("\ninputs")
-        print(inputs)
-        print("\ninputs_rev")
-        print(inputs_rev)
+        #print("\ninputs")
+        #print(inputs)
+        #kernels = tf.transpose(W,perm = [0,1,3,2])
         kernels = tf.split(W, split, 3)
+        print(kernels)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
-        print(outputs)
+        #print(outputs)
         conv = tf.concat(outputs, channel_axis)
-        print(conv)
+        #print(conv)
         if activation is None:
             activation = tf.identity
         ret = activation(tf.nn.bias_add(conv, b, data_format=data_format) if use_bias else conv, name='output')
