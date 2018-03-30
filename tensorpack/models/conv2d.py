@@ -99,8 +99,9 @@ def Conv2D(
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
-        inputs = tf.split(inputs, split, channel_axis)
         inputs_rev = tf.split(inputs, in_channel, channel_axis)
+        inputs = tf.split(inputs, split, channel_axis)
+        
         print("\ninputs")
         print(inputs)
         print("\ninputs_rev")
