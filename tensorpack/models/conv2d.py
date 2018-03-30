@@ -106,7 +106,7 @@ def Conv2D(
         #print(inputs)
         kernels = W
         kernels = tf.transpose(kernels, perm=[0,1,3,2])
-        kernels = tf.split(W, in_channel, 3)
+        kernels = tf.split(kernels, in_channel, 3)
         #print(kernels)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
