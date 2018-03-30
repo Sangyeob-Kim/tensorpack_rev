@@ -104,14 +104,13 @@ def Conv2D(
 
         inputs = tf.split(inputs, split, channel_axis)
         print(inputs)
-        #print(inputs.get_shape().as_list())
         kernels = tf.split(W, split, 3)
-        #print(kernels.get_shape().as_list())
+        print(kernels)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
-        #print(outputs.get_shape().as_list())
+        print(outputs)
         conv = tf.concat(outputs, channel_axis)
-        #print(conv.get_shape().as_list())
+        print(conv)
         if activation is None:
             activation = tf.identity
         ret = activation(tf.nn.bias_add(conv, b, data_format=data_format) if use_bias else conv, name='output')
