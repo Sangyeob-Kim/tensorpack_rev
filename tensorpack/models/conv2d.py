@@ -82,7 +82,7 @@ def Conv2D(
             "Not supported by group conv now!"
 
         out_channel = filters
-        assert out_channel % split == 0
+        #assert out_channel % split == 0
         assert dilation_rate == (1, 1) or get_tf_version_number() >= 1.5, 'TF>=1.5 required for group dilated conv'
 
         kernel_shape = shape2d(kernel_size)
