@@ -39,10 +39,13 @@ def Conv2D(
     """
     A wrapper around `tf.layers.Conv2D`.
     Some differences to maintain backward-compatibility:
+
     1. Default kernel initializer is variance_scaling_initializer(2.0).
     2. Default padding is 'same'.
     3. Support 'split' argument to do group conv.
+
     Variable Names:
+
     * ``W``: weights
     * ``b``: bias
     """
@@ -99,21 +102,19 @@ def Conv2D(
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
-        #inputs_rev = tf.split(inputs, in_channel, channel_axis)
-        inputs = tf.split(inputs, in_channel, channel_axis)
-        #inputs = tf.split(inputs, split, channel_axis)
-        
-        #print("\ninputs")
+        inputs = tf.split(inputs, split, channel_axis)
         #print(inputs)
-        kernels = tf.transpose(W,perm = [0,1,3,2])
-        kernels = tf.split(W, in_channel, 3)
-        #kernels = tf.split(W,split,3)
+        kernels = W
+        kernels = tf.transpose(kernels, perm=[0,1,3,2])
+        kernels = tf.split(W, out_channel, 3)
         print("\nkernel")
         print(kernels)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
-        #print(outputs)
-        conv = tf.concat(outputs, channel_axis)
+        print("\noutput")
+        print(outputs)
+        conv = outputs#tf.concat(outputs, channel_axis)
+        #conv = tf.reduce_sum(outputs,channel_axis)
         #print(conv)
         if activation is None:
             activation = tf.identity
@@ -150,9 +151,12 @@ def Conv2DTranspose(
     """
     A wrapper around `tf.layers.Conv2DTranspose`.
     Some differences to maintain backward-compatibility:
+
     1. Default kernel initializer is variance_scaling_initializer(2.0).
     2. Default padding is 'same'
+
     Variable Names:
+
     * ``W``: weights
     * ``b``: bias
     """
