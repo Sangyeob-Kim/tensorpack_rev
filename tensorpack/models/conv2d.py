@@ -116,9 +116,14 @@ def Conv2D(
         #print(kernels)
         #outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                    #for i, k in zip(inputs, kernels)]
+        count = 0
         for i, k in zip(inputs, kernels):
-            print(i)
-        outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
+            if(count==0):
+                outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
+            else:
+                outputs = tf.add(outputs, tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs))    
+            count+=1
+            
         #print("\noutputs")
         #print(outputs)
         conv = outputs#tf.concat(outputs, channel_axis)
