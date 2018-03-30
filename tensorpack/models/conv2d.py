@@ -103,6 +103,7 @@ def Conv2D(
         kernels = tf.split(W, split, 3)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
+        print(outputs)
         conv = tf.concat(outputs, channel_axis)
         print(conv)
         if activation is None:
