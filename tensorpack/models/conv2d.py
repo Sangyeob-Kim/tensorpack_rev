@@ -105,8 +105,14 @@ def Conv2D(
         inputs = tf.split(inputs, split, channel_axis)
         #print(inputs)
         kernels = W
+        print("\nkernels1")
+        print(kernels)
         kernels = tf.transpose(kernels, perm=[0,1,3,2])
+        print("\nkernels2")
+        print(kernels)
         kernels = tf.split(kernels, in_channel, 3)
+        print("\nkernels3")
+        print(kernels)
         #print(kernels)
         outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
                    for i, k in zip(inputs, kernels)]
