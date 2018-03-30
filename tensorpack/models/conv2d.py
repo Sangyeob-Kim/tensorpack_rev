@@ -114,12 +114,15 @@ def Conv2D(
         #print("\nkernels3")
         #print(kernels)
         #print(kernels)
-        outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                   for i, k in zip(inputs, kernels)]
+        #outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
+                   #for i, k in zip(inputs, kernels)]
+        for i, k in zip(inputs, kernels):
+            print(i)
+        outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
         #print("\noutputs")
         #print(outputs)
-        #conv = outputs#tf.concat(outputs, channel_axis)
-        conv = tf.reduce_sum(outputs,0)
+        conv = outputs#tf.concat(outputs, channel_axis)
+        #conv = tf.reduce_sum(outputs,0)
         #print("\nconv")
         #print(conv)
         if activation is None:
