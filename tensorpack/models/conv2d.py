@@ -119,7 +119,7 @@ def Conv2D(
         print("\noutputs")
         print(outputs)
         #conv = outputs#tf.concat(outputs, channel_axis)
-        conv = tf.reduce_sum(outputs,channel_axis)
+        conv = tf.reduce_sum(outputs,0)
         print("\nconv")
         print(conv)
         if activation is None:
