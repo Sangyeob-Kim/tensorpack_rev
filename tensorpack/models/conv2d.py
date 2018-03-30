@@ -112,7 +112,7 @@ def Conv2D(
                    for i, k in zip(inputs, kernels)]
         #print(outputs)
         #conv = tf.concat(outputs, channel_axis)
-        conv = tf.reduce_sum(outputs,channel_axis)
+        #conv = tf.reduce_sum(outputs,channel_axis)
         #print(conv)
         if activation is None:
             activation = tf.identity
