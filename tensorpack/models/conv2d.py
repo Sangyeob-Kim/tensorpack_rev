@@ -118,10 +118,11 @@ def Conv2D(
                    #for i, k in zip(inputs, kernels)]
         count = 0
         init = tf.global_variables_initializer()
-        sess = tf.Session()
+        
         for i, k in zip(inputs, kernels):
             if(count==0):
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
+                sess = tf.Session()
                 sess.run(init)
                 temp = outputs.eval(sess)
                 sess.close()
