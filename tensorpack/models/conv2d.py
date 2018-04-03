@@ -121,7 +121,6 @@ def Conv2D(
         for i, k in zip(inputs, kernels):
             if(count==0):
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                outputs = tf.round(outputs)
             else:
                 outputs = tf.add(outputs, tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs))    
             count+=1
