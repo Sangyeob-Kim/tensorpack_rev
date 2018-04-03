@@ -117,9 +117,15 @@ def Conv2D(
         #outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                    #for i, k in zip(inputs, kernels)]
         count = 0
+        init = tf.global_variables_initializer()
+        sess = tf.Session()
         for i, k in zip(inputs, kernels):
             if(count==0):
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
+                sess.run(init)
+                temp = outputs.eval(sess)
+                sess.close()
+                outputs = tf.convert_to_tensor(temp, np.float32)
             else:
                 outputs = tf.add(outputs, tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs))    
             count+=1
