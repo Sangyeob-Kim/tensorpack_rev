@@ -5,6 +5,7 @@
 import os
 import tensorflow as tf
 
+from tensorpack import *
 from ..callbacks import (
     MovingAverageSummary,
     ProgressBar, MergeAllSummaries,
@@ -15,6 +16,7 @@ from ..utils import logger
 from ..tfutils.sessinit import SessionInit, SaverRestore, JustCurrentSession
 from ..tfutils.sesscreate import NewSessionCreator
 from ..input_source import InputSource
+
 
 __all__ = ['TrainConfig', 'AutoResumeTrainConfig', 'DEFAULT_CALLBACKS', 'DEFAULT_MONITORS']
 
