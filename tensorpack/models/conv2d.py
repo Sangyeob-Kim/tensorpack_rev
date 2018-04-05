@@ -239,7 +239,7 @@ def Conv2DTranspose(
         kernel_regularizer=None,
         bias_regularizer=None,
         activity_regularizer=None,
-        quantization=None):
+        quantization=1):
 	
     """
     A wrapper around `tf.layers.Conv2DTranspose`.
