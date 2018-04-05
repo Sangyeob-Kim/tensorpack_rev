@@ -70,7 +70,6 @@ def Conv2D(
             ret.variables.b = layer.bias
 
     else:
-	print("hello!")
         # group conv implementation
         data_format = get_data_format(data_format, tfmode=False)
         in_shape = inputs.get_shape().as_list()
@@ -115,66 +114,12 @@ def Conv2D(
         #outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                    #for i, k in zip(inputs, kernels)]
         count = 0
-        before = 32
-        after = 16
-        tmp = 0 
         
-        for i in range(after):
-	        if(i-3<0):
-		        tmp+= 1/np.power(2,-i+3)
-	        else:
-		        tmp += np.power(2,i-3)
-
-        key = (before - after)/2
-        tmp2 = 1/np.power(2,key)
-        tmp3 = np.power(2,key+1)
-
         for i, k in zip(inputs, kernels):
             if(count==0):
-                b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
-                c = tf.floor(tf.div(i,tmp3))
-                c = tf.round((tf.div(c,c+0.1)))
-                c = tf.add(c*tmp,c*b*-1)
-                i = tf.add(b,c)
-                
-                b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
-                c = tf.floor(tf.div(k,tmp3))
-                c = tf.round((tf.div(c,c+0.1)))
-                c = tf.add(c*tmp,c*b*-1)
-                k = tf.add(b,c)
-                
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
-                c = tf.floor(tf.div(outputs,tmp3))
-                c = tf.round((tf.div(c,c+0.1)))
-                c = tf.add(c*tmp,c*b*-1)
-                outputs = tf.add(b,c)
-		tf.print(outputs)
             else:
-                b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
-                c = tf.floor(tf.div(i,tmp3))
-                c = tf.round((tf.div(c,c+0.1)))
-                c = tf.add(c*tmp,c*b*-1)
-                i = tf.add(b,c)
-                
-                b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
-                c = tf.floor(tf.div(k,tmp3))
-                c = tf.round((tf.div(c,c+0.1)))
-                c = tf.add(c*tmp,c*b*-1)
-                k = tf.add(b,c)
-                
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2])
-                b = tf.add(outputs2,-1*tf.mod(outputs2,(tf.div(outputs2,outputs2) * tmp2)))
-                c = tf.floor(tf.div(outputs2,tmp3))
-                c = tf.round((tf.div(c,c+0.1)))
-                c = tf.add(c*tmp,c*b*-1)
-                outputs2 = tf.add(b,c)
-                outputs = tf.add(outputs, outputs2, stride, padding.upper(), **kwargs))
-                b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
-                c = tf.floor(tf.div(outputs,tmp3))
-                c = tf.round((tf.div(c,c+0.1)))
-                c = tf.add(c*tmp,c*b*-1)
-                outputs = tf.add(b,c)
+                outputs = tf.add(outputs, tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs))    
             count+=1
             
         #print("\noutputs")
