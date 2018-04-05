@@ -134,21 +134,18 @@ def Conv2D(
 
         for i, k in zip(inputs, kernels):
             if(count==0):
-                sess = tf.InteractiveSession()
-                i = i.eval()
-                sess.close()
-                i = tf.convert_to_tensor(i, np.float32)
-                #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
-                #c = tf.floor(tf.div(i,tmp3))
-                #c = tf.round((tf.div(c,c+0.1)))
-                #c = tf.add(c*tmp,c*b*-1)
-                #i = tf.add(b,c)
+                with tf.device('/cpu:0'):
+                    b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
+                    c = tf.floor(tf.div(i,tmp3))
+                    c = tf.round((tf.div(c,c+0.1)))
+                    c = tf.add(c*tmp,c*b*-1)
+                    i = tf.add(b,c)
                 
-                #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
-                #c = tf.floor(tf.div(k,tmp3))
-                #c = tf.round((tf.div(c,c+0.1)))
-                #c = tf.add(c*tmp,c*b*-1)
-                #k = tf.add(b,c)
+                    b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
+                    c = tf.floor(tf.div(k,tmp3))
+                    c = tf.round((tf.div(c,c+0.1)))
+                    c = tf.add(c*tmp,c*b*-1)
+                    k = tf.add(b,c)
                 
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 #b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
