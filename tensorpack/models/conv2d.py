@@ -36,7 +36,8 @@ def Conv2D(
         kernel_regularizer=None,
         bias_regularizer=None,
         activity_regularizer=None,
-        split=1):
+        split=1,
+        quantization=1):
     """
     A wrapper around `tf.layers.Conv2D`.
     Some differences to maintain backward-compatibility:
@@ -140,16 +141,16 @@ def Conv2D(
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #i = tf.add(b,c)
-                i = tf.quantize(i,-8, 7.9375, tf.qint8)
-                i = tf.dequantize(i.output,-8,7.9375)
+                #i = tf.quantize(i,-8, 7.9375, tf.qint8)
+                #i = tf.dequantize(i.output,-8,7.9375)
 
                 #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
                 #c = tf.floor(tf.div(k,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #k = tf.add(b,c)
-                k = tf.quantize(k,-8, 7.9375, tf.qint8)
-                k = tf.dequantize(k.output,-8,7.9375)
+                #k = tf.quantize(k,-8, 7.9375, tf.qint8)
+                #k = tf.dequantize(k.output,-8,7.9375)
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 
@@ -159,8 +160,8 @@ def Conv2D(
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #outputs = tf.add(b,c)
-                outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
-                outputs = tf.dequantize(outputs.output,-8,7.9375)
+                #outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
+                #outputs = tf.dequantize(outputs.output,-8,7.9375)
 		
             else:
                 
@@ -169,26 +170,26 @@ def Conv2D(
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #i = tf.add(b,c)
-                i = tf.quantize(i,-8, 7.9375, tf.qint8)
-                i = tf.dequantize(i.output,-8,7.9375)
+                #i = tf.quantize(i,-8, 7.9375, tf.qint8)
+                #i = tf.dequantize(i.output,-8,7.9375)
                 #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
                 #c = tf.floor(tf.div(k,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #k = tf.add(b,c)
-                k = tf.quantize(k,-8, 7.9375, tf.qint8)
-                k = tf.dequantize(k.output,-8,7.9375)
+                #k = tf.quantize(k,-8, 7.9375, tf.qint8)
+                #k = tf.dequantize(k.output,-8,7.9375)
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                outputs2 = tf.quantize(outputs2,-8, 7.9375, tf.qint8)
-                outputs2 = tf.dequantize(outputs2.output,-8,7.9375)
+                #outputs2 = tf.quantize(outputs2,-8, 7.9375, tf.qint8)
+                #outputs2 = tf.dequantize(outputs2.output,-8,7.9375)
                 #b = tf.add(outputs2,-1*tf.mod(outputs2,(tf.div(outputs2,outputs2) * tmp2)))
                 #c = tf.floor(tf.div(outputs2,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #outputs2 = tf.add(b,c)
                 outputs = tf.add(outputs, outputs2)
-                outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
-                outputs = tf.dequantize(outputs.output,-8,7.9375)
+                #outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
+                #outputs = tf.dequantize(outputs.output,-8,7.9375)
                 #b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
                 #c = tf.floor(tf.div(outputs,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
@@ -233,7 +234,8 @@ def Conv2DTranspose(
         bias_initializer=tf.zeros_initializer(),
         kernel_regularizer=None,
         bias_regularizer=None,
-        activity_regularizer=None):
+        activity_regularizer=None,
+        quantization=None):
     """
     A wrapper around `tf.layers.Conv2DTranspose`.
     Some differences to maintain backward-compatibility:
