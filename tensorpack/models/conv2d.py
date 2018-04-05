@@ -149,8 +149,8 @@ def Conv2D(
                 
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 
-		with tf.device('/cpu:0'):
-		    b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
+                with tf.device('/cpu:0'):
+                    b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
                     c = tf.floor(tf.div(outputs,tmp3))
                     c = tf.round((tf.div(c,c+0.1)))
                     c = tf.add(c*tmp,c*b*-1)
