@@ -124,7 +124,8 @@ class TrainConfig(object):
             if session_config is not None:
                 self.session_creator = NewSessionCreator(config=session_config)
             else:
-                self.session_creator = NewSessionCreator(config=None)
+                #self.session_creator = NewSessionCreator(config=None)
+                self.session_creator = NewSessionCreator(config=get_default_sess_config(0.5))
         else:
             self.session_creator = session_creator
             assert session_config is None, "Cannot set both session_creator and session_config!"
