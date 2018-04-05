@@ -136,30 +136,32 @@ def Conv2D(
         for i, k in zip(inputs, kernels):
             if(count==0):
                 #with tf.device('/cpu:0'):
-                #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
-                #c = tf.floor(tf.div(i,tmp3))
-                #c = tf.round((tf.div(c,c+0.1)))
-                #c = tf.add(c*tmp,c*b*-1)
-                #i = tf.add(b,c)
-                #i = tf.quantize(i,-8, 7.9375, tf.qint8)
+		if(quantization!=None):
+                    b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
+                    c = tf.floor(tf.div(i,tmp3))
+                    c = tf.round((tf.div(c,c+0.1)))
+                    c = tf.add(c*tmp,c*b*-1)
+                    i = tf.add(b,c)
+                    i = tf.quantize(i,-8, 7.9375, tf.qint8)
                 #i = tf.dequantize(i.output,-8,7.9375)
 
-                #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
-                #c = tf.floor(tf.div(k,tmp3))
-                #c = tf.round((tf.div(c,c+0.1)))
-                #c = tf.add(c*tmp,c*b*-1)
-                #k = tf.add(b,c)
-                #k = tf.quantize(k,-8, 7.9375, tf.qint8)
-                #k = tf.dequantize(k.output,-8,7.9375)
+                    b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
+                    c = tf.floor(tf.div(k,tmp3))
+                    c = tf.round((tf.div(c,c+0.1)))
+                    c = tf.add(c*tmp,c*b*-1)
+                    k = tf.add(b,c)
+                    k = tf.quantize(k,-8, 7.9375, tf.qint8)
+                    k = tf.dequantize(k.output,-8,7.9375)
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 
                 #with tf.device('/cpu:0'):
-                #b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
-                #c = tf.floor(tf.div(outputs,tmp3))
-                #c = tf.round((tf.div(c,c+0.1)))
-                #c = tf.add(c*tmp,c*b*-1)
-                #outputs = tf.add(b,c)
+		if(quantization!=None):
+                    b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
+                    c = tf.floor(tf.div(outputs,tmp3))
+                    c = tf.round((tf.div(c,c+0.1)))
+                    c = tf.add(c*tmp,c*b*-1)
+                    outputs = tf.add(b,c)
                 #outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
                 #outputs = tf.dequantize(outputs.output,-8,7.9375)
 		
