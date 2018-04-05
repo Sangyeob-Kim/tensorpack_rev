@@ -124,10 +124,7 @@ class TrainConfig(object):
             if session_config is not None:
                 self.session_creator = NewSessionCreator(config=session_config)
             else:
-                tf_conf = tf.ConfigProto()
-                tf_conf.gpu_options.per_process_gpu_memory_fraction = 0.45
-
-                self.session_creator = NewSessionCreator(config=tf_conf)
+                self.session_creator = NewSessionCreator(config=None)
         else:
             self.session_creator = session_creator
             assert session_config is None, "Cannot set both session_creator and session_config!"
