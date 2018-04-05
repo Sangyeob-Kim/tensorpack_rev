@@ -134,8 +134,8 @@ def Conv2D(
 
         for i, k in zip(inputs, kernels):
             if(count==0):
-		with tf.Session() as sess:
-  			print("hello")
+                with tf.Session() as sess:
+                    print("hello")
                 #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
                 #c = tf.floor(tf.div(i,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
