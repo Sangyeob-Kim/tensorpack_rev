@@ -73,6 +73,7 @@ def Conv2D(
             ret.variables.b = layer.bias
 
     else:
+	print("hello!")
         # group conv implementation
         data_format = get_data_format(data_format, tfmode=False)
         in_shape = inputs.get_shape().as_list()
@@ -151,6 +152,7 @@ def Conv2D(
                 c = tf.round((tf.div(c,c+0.1)))
                 c = tf.add(c*tmp,c*b*-1)
                 outputs = tf.add(b,c)
+		tf.print(outputs)
             else:
                 b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
                 c = tf.floor(tf.div(i,tmp3))
