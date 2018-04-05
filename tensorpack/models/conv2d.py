@@ -157,7 +157,7 @@ def Conv2D(
                     outputs = tf.add(b,c)
 		
             else:
-		with tf.device('/cpu:0'):
+                with tf.device('/cpu:0'):
                     b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
                     c = tf.floor(tf.div(i,tmp3))
                     c = tf.round((tf.div(c,c+0.1)))
