@@ -135,7 +135,18 @@ def Conv2D(
         for i, k in zip(inputs, kernels):
             if(count==0):
                 with tf.Session() as sess:
-                    print("hello")
+                    print(np.dtype(i))
+                    b = sess.run(i)
+                    print(np.dtype(b))
+                    b = b-np.mod(b/b * tmp2)
+                    c = np.round(np.floor(i/tmp3))
+                    c = c*tmp - c*b
+                    print(np.dtype(c))
+                    i = b+c
+                    print(np.dtype(i))
+                    i = tf.convert_to_tensor(a, np.float32)
+                                       					    
+	
                 #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
                 #c = tf.floor(tf.div(i,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
