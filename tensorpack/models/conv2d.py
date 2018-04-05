@@ -170,7 +170,7 @@ def Conv2D(
                 c = tf.round((tf.div(c,c+0.1)))
                 c = tf.add(c*tmp,c*b*-1)
                 outputs2 = tf.add(b,c)
-                outputs = tf.add(outputs, outputs2, stride, padding.upper(), **kwargs))
+                outputs = tf.add(outputs, outputs2)
                 b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
                 c = tf.floor(tf.div(outputs,tmp3))
                 c = tf.round((tf.div(c,c+0.1)))
