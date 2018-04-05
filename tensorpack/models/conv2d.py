@@ -185,7 +185,7 @@ def Conv2D(
                 #c = tf.floor(tf.div(outputs2,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
-                outputs2 = tf.add(b,c)
+                #outputs2 = tf.add(b,c)
                 outputs = tf.add(outputs, outputs2)
                 outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
                 outputs = tf.dequantize(outputs.output,-8,7.9375)
