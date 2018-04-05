@@ -144,7 +144,7 @@ def Conv2D(
                     #print(np.dtype(c))
                     i = b+c
                     #print(np.dtype(i))
-                    i = tf.convert_to_tensor(a, np.float32)
+                    i = tf.convert_to_tensor(i, np.float32)
                                        					    
 	
                 #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
