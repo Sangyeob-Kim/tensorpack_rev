@@ -73,7 +73,6 @@ def Conv2D(
             ret.variables.b = layer.bias
 
     else:
-	print("hello!")
         # group conv implementation
         data_format = get_data_format(data_format, tfmode=False)
         in_shape = inputs.get_shape().as_list()
