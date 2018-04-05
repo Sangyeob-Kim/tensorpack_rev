@@ -140,7 +140,7 @@ def Conv2D(
                 #c = tf.floor(tf.div(i,tmp3))
                 c = tf.floor((i/tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
-                c = np.round(c/(c+0.1))
+                c = tf.round(c/(c+0.1))
                 #c = tf.add(c*tmp,c*b*-1)
                 c = c*tmp - c*b
                 #i = tf.add(b,c)
@@ -153,7 +153,7 @@ def Conv2D(
                 #k = tf.add(b,c)
                 b = k - np.mod(k,k/k*tmp2)
                 c = tf.floor((k/tmp3))
-                c = np.round(c/(c+0.1))
+                c = tf.round(c/(c+0.1))
                 c = c*tmp - c*b
                 k = b+c
 		
