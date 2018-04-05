@@ -136,26 +136,16 @@ def Conv2D(
             if(count==0):
                 #with tf.device('/cpu:0'):
                 #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
-                b = i - np.mod(i,i/i*tmp2)
                 #c = tf.floor(tf.div(i,tmp3))
-                c = tf.floor((i/tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
-                c = tf.round(c/(c+0.1))
                 #c = tf.add(c*tmp,c*b*-1)
-                c = c*tmp - c*b
                 #i = tf.add(b,c)
-                i = b+c
                 
                 #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
                 #c = tf.floor(tf.div(k,tmp3))
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #k = tf.add(b,c)
-                b = k - np.mod(k,k/k*tmp2)
-                c = tf.floor((k/tmp3))
-                c = tf.round(c/(c+0.1))
-                c = c*tmp - c*b
-                k = b+c
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 
@@ -165,11 +155,6 @@ def Conv2D(
                 #c = tf.round((tf.div(c,c+0.1)))
                 #c = tf.add(c*tmp,c*b*-1)
                 #outputs = tf.add(b,c)
-                b = k - np.mod(outputs,outputs/outputs*tmp2)
-                c = np.floor((outputs/tmp3))
-                c = np.round(c/(c+0.1))
-                c = c*tmp - c*b
-                outputs = b+c
 		
             else:
                 
