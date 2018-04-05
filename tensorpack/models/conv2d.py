@@ -165,7 +165,7 @@ def Conv2D(
                 c = tf.add(c*tmp,c*b*-1)
                 k = tf.add(b,c)
                 
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]))
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 b = tf.add(outputs2,-1*tf.mod(outputs2,(tf.div(outputs2,outputs2) * tmp2)))
                 c = tf.floor(tf.div(outputs2,tmp3))
                 c = tf.round((tf.div(c,c+0.1)))
