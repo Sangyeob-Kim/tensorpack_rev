@@ -136,8 +136,8 @@ def Conv2D(
         range_T_add_1_div_2 = (range_T + 1)/2.0
         max_range = 7.9375
         min_range = -8
-        range = max_range - min_range
-        range_div_range_T = range/range_T
+        range_target = max_range - min_range
+        range_div_range_T = range_target/range_T
         for i, k in zip(inputs, kernels):
             if(count==0):
                 #with tf.device('/cpu:0'):
