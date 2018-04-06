@@ -149,7 +149,7 @@ def Conv2D(
                     #i = tf.add(b,c)
                 i = tf.quantize(i,-8, 7.9375, tf.qint8)
                 #i = tf.dequantize(i.output,-8,7.9375)
-                i = (i.output+range_T_add_1_div_2)
+                i = tf.add(i.output,range_T_add_1_div_2)
                 i = (i*range_div_range_T)
                     #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
                     #c = tf.floor(tf.div(k,tmp3))
