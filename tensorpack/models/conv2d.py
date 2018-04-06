@@ -249,10 +249,10 @@ def Conv2D(
         #conv = tf.reduce_sum(outputs,0)
         #print("\nconv")
         #print(conv)
-        sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+        #sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
         # Runs the op.
         #while(1):
-        print(sess.run(conv))
+        #print(sess.run(conv))
         #print(sess.run(b))
         #print(sess.run(c))
         if activation is None:
