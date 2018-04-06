@@ -132,10 +132,10 @@ def Conv2D(
         key = (before - after)/2
         tmp2 = 1/np.power(2,key)
         tmp3 = np.power(2,key+1)
-        range_T = 127+128
-        range_T_add_1_div_2 = (range_T + 1)/2.0
+        range_T = 127.0+128.0
+        range_T_add_1_div_2 = (range_T + 1.0)/2.0
         max_range = 7.9375
-        min_range = -8
+        min_range = -8.0
         range_target = max_range - min_range
         range_div_range_T = range_target/range_T
         for i, k in zip(inputs, kernels):
