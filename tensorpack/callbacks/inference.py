@@ -55,8 +55,8 @@ class Inferencer(Callback):
         Return a list of tensor names (guaranteed not op name) this inferencer needs.
         """
         ret = self._get_fetches()
-        return ['conv0/outpuit:0']
-        #return [get_op_tensor_name(n)[1] for n in ret]
+        #return ['conv0/outpuit:0']
+        return [get_op_tensor_name(n)[1] for n in ret]
 
     def _get_fetches(self):
         raise NotImplementedError()
