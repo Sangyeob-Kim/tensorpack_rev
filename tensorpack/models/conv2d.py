@@ -149,7 +149,7 @@ def Conv2D(
                     #i = tf.add(b,c)
                 i = tf.quantize(i,-8, 7.9375, tf.qint8)
                 #i = tf.dequantize(i.output,-8,7.9375)
-                i = (i+range_T_add_1_div_2)
+                i = (i.output+range_T_add_1_div_2)
                 i = (i*range_div_range_T)
                     #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
                     #c = tf.floor(tf.div(k,tmp3))
@@ -157,7 +157,7 @@ def Conv2D(
                     #c = tf.add(c*tmp,c*b*-1)
                     #k = tf.add(b,c)
                 k = tf.quantize(k,-8, 7.9375, tf.qint8)
-                k = (k+range_T_add_1_div_2)
+                k = (k.output+range_T_add_1_div_2)
                 k = (k*range_div_range_T)
                 #k = tf.dequantize(k.output,-8,7.9375)
 		
@@ -171,7 +171,7 @@ def Conv2D(
                     #c = tf.add(c*tmp,c*b*-1)
                     #outputs = tf.add(b,c)
                 outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
-                outputs = (outputs+range_T_add_1_div_2)
+                outputs = (outputs.output+range_T_add_1_div_2)
                 outputs = (outputs*range_div_range_T)
                 #outputs = tf.dequantize(outputs.output,-8,7.9375)
 		
@@ -184,7 +184,7 @@ def Conv2D(
                     #i = tf.add(b,c)
                 i = tf.quantize(i,-8, 7.9375, tf.qint8)
                 #i = tf.dequantize(i.output,-8,7.9375)
-                i = (i+range_T_add_1_div_2)
+                i = (i.output+range_T_add_1_div_2)
                 i = (i*range_div_range_T)
                     #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
                     #c = tf.floor(tf.div(k,tmp3))
@@ -198,7 +198,7 @@ def Conv2D(
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 outputs2 = tf.quantize(outputs2,-8, 7.9375, tf.qint8)
                 #outputs2 = tf.dequantize(outputs2.output,-8,7.9375)
-                outputs2 = (outputs2+range_T_add_1_div_2)
+                outputs2 = (outputs2.output+range_T_add_1_div_2)
                 outputs2 = (outputs2*range_div_range_T)
                 #if(quantization!=None):
                     #b = tf.add(outputs2,-1*tf.mod(outputs2,(tf.div(outputs2,outputs2) * tmp2)))
@@ -209,7 +209,7 @@ def Conv2D(
                 outputs = tf.add(outputs, outputs2)
                 outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
                 #outputs = tf.dequantize(outputs.output,-8,7.9375)
-                outputs = (outputs+range_T_add_1_div_2)
+                outputs = (outputs.output+range_T_add_1_div_2)
                 outputs = (outputs*range_div_range_T)
                 #if(quantization!=None):
                     #b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
