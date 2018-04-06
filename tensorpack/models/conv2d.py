@@ -83,7 +83,7 @@ def Conv2D(
         channel_axis = 3 if data_format == 'NHWC' else 1
         in_channel = in_shape[channel_axis]
         assert in_channel is not None, "[Conv2D] Input cannot have unknown channel!"
-        assert in_channel % split == 0
+        #assert in_channel % split == 0
 
         assert kernel_regularizer is None and bias_regularizer is None and activity_regularizer is None, \
             "Not supported by group conv now!"
