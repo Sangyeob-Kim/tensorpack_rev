@@ -122,21 +122,21 @@ def Conv2D(
                    #for i, k in zip(inputs, kernels)]
         count = 0
         before = 32
-        tmp = 0 
+        tmp = 0.0 
         after_div2=after/2
         for i in range(after-1):
 	        if((i-after_div2)<0):
-		        tmp+= 1/np.power(2,-i+after_div2)
+		        tmp+= 1.0/np.power(2,-i+after_div2)
 	        else:
 		        tmp += np.power(2,i-after_div2)
 
         max_range = tmp
-        min_range = -1*np.power(2,after_div2-1) 
+        min_range = -1.0*np.power(2,after_div2-1) 
         #key = (before - after)/2
         #tmp2 = 1/np.power(2,key)
         #tmp3 = np.power(2,key+1)
         #range_T = 127.0+128.0
-        range_T = np.power(2,after-1) * 2 - 1
+        range_T = np.power(2,after-1) * 2.0 - 1.0
         range_T_add_1_div_2 = (range_T + 1.0)/2.0
         #max_range = 7.9375
         #min_range = -8.0
