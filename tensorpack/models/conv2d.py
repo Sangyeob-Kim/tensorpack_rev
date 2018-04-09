@@ -99,18 +99,7 @@ def Conv2D(
         kwargs = dict(data_format=data_format)
         if get_tf_version_number() >= 1.5:
             kwargs['dilations'] = shape4d(dilation_rate, data_format=data_format)
-
-        W = tf.get_variable(
-            'W', filter_shape, initializer=kernel_initializer)
-
-        if use_bias:
-            b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
-
-        inputs = tf.split(inputs, in_channel, channel_axis)
-        kernels = W
-        kernels = tf.transpose(kernels, perm=[0,1,3,2])
-        kernels = tf.split(kernels, in_channel, 3)
-        count = 0
+       
         before = 32
         tmp = 0.0 
         after_div2=after/2
@@ -123,129 +112,80 @@ def Conv2D(
 
         max_range = tmp
         min_range = -1.0*np.power(2,after_div2-1) 
-        #key = (before - after)/2
-        #tmp2 = 1/np.power(2,key)
-        #tmp3 = np.power(2,key+1)
-        #range_T = 127.0+128.0
         range_T = np.power(2,after-1) * 2.0 - 1.0
         range_T_add_1_div_2 = (range_T + 1.0)/2.0
-        #max_range = 7.9375
-        #min_range = -8.0
         range_target = max_range - min_range
         range_div_range_T = range_target/range_T
         one_over_range_div_range_T =1/ range_div_range_T
+
+        W = tf.get_variable(
+            'W', filter_shape, initializer=kernel_initializer)
+
+        if use_bias:
+            b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
+
+	inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+        inputs = (inputs+range_T_add_1_div_2)
+        inputs = min_range+(inputs*range_div_range_T)
+        inputs = tf.clip_by_value(inputs,min_range,max_range)
+
+	W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+        W = (W+range_T_add_1_div_2)
+        W = min_range+(W*range_div_range_T)
+        W = tf.clip_by_value(W,min_range,max_range)
+			
+        inputs = tf.split(inputs, in_channel, channel_axis)
+        kernels = W
+        kernels = tf.transpose(kernels, perm=[0,1,3,2])
+        kernels = tf.split(kernels, in_channel, 3)
+        count = 0	
+	
         for i, k in zip(inputs, kernels):
             if(count==0):
-                #with tf.device('/cpu:0'):
-                #if(quantization!=None):
-                    #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
-                    #c = tf.floor(tf.div(i,tmp3))
-                    #c = tf.round((tf.div(c,c+0.1)))
-                    #c = tf.add(c*tmp,c*b*-1)
-                    #i = tf.add(b,c)
-                #i = tf.quantize(i,-8, 7.9375, tf.qint8)
-                #i = tf.dequantize(i.output,-8,7.9375)
-                if (after != 32):
-                    i = tf.round((i - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                    i = (i+range_T_add_1_div_2)
-                    i = min_range+(i*range_div_range_T)
-                    i = tf.clip_by_value(i,min_range,max_range)
-                    #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
-                    #c = tf.floor(tf.div(k,tmp3))
-                    #c = tf.round((tf.div(c,c+0.1)))
-                    #c = tf.add(c*tmp,c*b*-1)
-                    #k = tf.add(b,c)
-                #k = tf.quantize(k,-8, 7.9375, tf.qint8)
-                    k = tf.round((k - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                    k = (k+range_T_add_1_div_2)
-                    k = min_range+(k*range_div_range_T)
-                    k = tf.clip_by_value(k,min_range,max_range)
-                #k = tf.dequantize(k.output,-8,7.9375)
+                #if (after != 32):
+                    #i = tf.round((i - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                    #i = (i+range_T_add_1_div_2)
+                    #i = min_range+(i*range_div_range_T)
+                    #i = tf.clip_by_value(i,min_range,max_range)
+                    #k = tf.round((k - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                    #k = (k+range_T_add_1_div_2)
+                    #k = min_range+(k*range_div_range_T)
+                    #k = tf.clip_by_value(k,min_range,max_range)
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                
-                #with tf.device('/cpu:0'):
-                #if(quantization!=None):
-                    #b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
-                    #c = tf.floor(tf.div(outputs,tmp3))
-                    #c = tf.round((tf.div(c,c+0.1)))
-                    #c = tf.add(c*tmp,c*b*-1)
-                    #outputs = tf.add(b,c)
-                #outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
+  
                 if (after != 32):
                     outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     outputs = (outputs+range_T_add_1_div_2)
                     outputs = min_range+(outputs*range_div_range_T)
                     outputs = tf.clip_by_value(outputs,min_range,max_range)
-                #outputs = tf.dequantize(outputs.output,-8,7.9375)
 		
             else:
-                #if(quantization!=None):
-                    #b = tf.add(i,-1*tf.mod(i,(tf.div(i,i) * tmp2)))
-                    #c = tf.floor(tf.div(i,tmp3))
-                    #c = tf.round((tf.div(c,c+0.1)))
-                    #c = tf.add(c*tmp,c*b*-1)
-                    #i = tf.add(b,c)
-                #i = tf.quantize(i,-8, 7.9375, tf.qint8)
-                #i = tf.dequantize(i.output,-8,7.9375)
-                if (after != 32):
-                    i = tf.round((i - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                    i = (i+range_T_add_1_div_2)
-                    i = min_range+(i*range_div_range_T)
-                    i = tf.clip_by_value(i,min_range,max_range)
-                    #b = tf.add(k,-1*tf.mod(k,(tf.div(k,k) * tmp2)))
-                    #c = tf.floor(tf.div(k,tmp3))
-                    #c = tf.round((tf.div(c,c+0.1)))
-                    #c = tf.add(c*tmp,c*b*-1)
-                    #k = tf.add(b,c)
-                #k = tf.quantize(k,-8, 7.9375, tf.qint8)
-                #k = tf.dequantize(k.output,-8,7.9375)
-                    k = tf.round((k - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                    k = (k+range_T_add_1_div_2)
-                    k = min_range+(k*range_div_range_T)
-                    k = tf.clip_by_value(k,min_range,max_range)	
+                #if (after != 32):
+                    #i = tf.round((i - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                    #i = (i+range_T_add_1_div_2)
+                    #i = min_range+(i*range_div_range_T)
+                    #i = tf.clip_by_value(i,min_range,max_range)
+                    #k = tf.round((k - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                    #k = (k+range_T_add_1_div_2)
+                    #k = min_range+(k*range_div_range_T)
+                    #k = tf.clip_by_value(k,min_range,max_range)	
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                #outputs2 = tf.quantize(outputs2,-8, 7.9375, tf.qint8)
-                #outputs2 = tf.dequantize(outputs2.output,-8,7.9375)
                 if (after != 32):
                     outputs2 = tf.round((outputs2 - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     outputs2 = (outputs2+range_T_add_1_div_2)
                     outputs2 = min_range+(outputs2*range_div_range_T)
                     outputs2 = tf.clip_by_value(outputs2,min_range,max_range)
-                #if(quantization!=None):
-                    #b = tf.add(outputs2,-1*tf.mod(outputs2,(tf.div(outputs2,outputs2) * tmp2)))
-                    #c = tf.floor(tf.div(outputs2,tmp3))
-                    #c = tf.round((tf.div(c,c+0.1)))
-                    #c = tf.add(c*tmp,c*b*-1)
-                    #outputs2 = tf.add(b,c)
+
                 outputs = tf.add(outputs, outputs2)
-                #outputs = tf.quantize(outputs,-8, 7.9375, tf.qint8)
-                #outputs = tf.dequantize(outputs.output,-8,7.9375)
                 if (after != 32):
                     outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     outputs = (outputs+range_T_add_1_div_2)
                     outputs = min_range+(outputs*range_div_range_T)
                     outputs = tf.clip_by_value(outputs,min_range,max_range)
-                #if(quantization!=None):
-                    #b = tf.add(outputs,-1*tf.mod(outputs,(tf.div(outputs,outputs) * tmp2)))
-                    #c = tf.floor(tf.div(outputs,tmp3))
-                    #c = tf.round((tf.div(c,c+0.1)))
-                    #c = tf.add(c*tmp,c*b*-1)
-                    #outputs = tf.add(b,c)
             count+=1
-            
-        #print("\noutputs")
-        #print(outputs)
-        conv = outputs#tf.concat(outputs, channel_axis)
-        #conv = tf.reduce_sum(outputs,0)
-        #print("\nconv")
-        #print(conv)
-        #sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
-        # Runs the op.
-        #while(1):
-        #print(sess.run(conv))
-        #print(sess.run(b))
-        #print(sess.run(c))
+
+        conv = outputs
         if activation is None:
             activation = tf.identity
         ret = activation(tf.nn.bias_add(conv, b, data_format=data_format) if use_bias else conv, name='output')
