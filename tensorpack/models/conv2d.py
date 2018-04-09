@@ -128,11 +128,16 @@ def Conv2D(
         inputs = (inputs+range_T_add_1_div_2)
         inputs = min_range+(inputs*range_div_range_T)
         inputs = tf.clip_by_value(inputs,min_range,max_range)
-
+	
         W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
         W = (W+range_T_add_1_div_2)
         W = min_range+(W*range_div_range_T)
         W = tf.clip_by_value(W,min_range,max_range)
+
+        b = tf.round((b - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+        b = (b+range_T_add_1_div_2)
+        b = min_range+(b*range_div_range_T)
+        b = tf.clip_by_value(b,min_range,max_range)
 			
         inputs = tf.split(inputs, in_channel, channel_axis)
         kernels = W
@@ -154,11 +159,11 @@ def Conv2D(
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
   
-                if (after != 32):
-                    outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                    outputs = (outputs+range_T_add_1_div_2)
-                    outputs = min_range+(outputs*range_div_range_T)
-                    outputs = tf.clip_by_value(outputs,min_range,max_range)
+                #if (after != 32):
+                outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                outputs = (outputs+range_T_add_1_div_2)
+                outputs = min_range+(outputs*range_div_range_T)
+                outputs = tf.clip_by_value(outputs,min_range,max_range)
 		
             else:
                 #if (after != 32):
@@ -171,18 +176,18 @@ def Conv2D(
                     #k = min_range+(k*range_div_range_T)
                     #k = tf.clip_by_value(k,min_range,max_range)	
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                if (after != 32):
-                    outputs2 = tf.round((outputs2 - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                    outputs2 = (outputs2+range_T_add_1_div_2)
-                    outputs2 = min_range+(outputs2*range_div_range_T)
-                    outputs2 = tf.clip_by_value(outputs2,min_range,max_range)
+                #if (after != 32):
+                outputs2 = tf.round((outputs2 - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                outputs2 = (outputs2+range_T_add_1_div_2)
+                outputs2 = min_range+(outputs2*range_div_range_T)
+                outputs2 = tf.clip_by_value(outputs2,min_range,max_range)
 
                 outputs = tf.add(outputs, outputs2)
-                if (after != 32):
-                    outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                    outputs = (outputs+range_T_add_1_div_2)
-                    outputs = min_range+(outputs*range_div_range_T)
-                    outputs = tf.clip_by_value(outputs,min_range,max_range)
+                #if (after != 32):
+                outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                outputs = (outputs+range_T_add_1_div_2)
+                outputs = min_range+(outputs*range_div_range_T)
+                outputs = tf.clip_by_value(outputs,min_range,max_range)
             count+=1
 
         conv = outputs
