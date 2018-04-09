@@ -54,7 +54,7 @@
 
 
 import tensorflow as tf
-
+import numpy as np
 from .common import layer_register, VariableHolder
 from .tflayer import convert_to_tflayer_args, rename_get_variable
 from ..tfutils import symbolic_functions as symbf
