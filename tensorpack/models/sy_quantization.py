@@ -102,10 +102,10 @@ def sy_quantization(
     #if use_bias:
     #    ret.variables.b = layer.bias
     #return tf.identity(ret, name='output')
-    #    inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-    #    inputs = (inputs+range_T_add_1_div_2)
-    #    inputs = min_range+(inputs*range_div_range_T)
-    #    inputs = tf.clip_by_value(inputs,min_range,max_range)
+    inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+    inputs = (inputs+range_T_add_1_div_2)
+    inputs = min_range+(inputs*range_div_range_T)
+    inputs = tf.clip_by_value(inputs,min_range,max_range)
     return tf.identity(inputs, name='output')
 
 
