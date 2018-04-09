@@ -85,7 +85,7 @@ def sy_quantization(
     * ``b``: bias
     """
 
-    inputs = symbf.batch_flatten(inputs)
+    #inputs = symbf.batch_flatten(inputs)
     #with rename_get_variable({'kernel': 'W', 'bias': 'b'}):
     #    layer = tf.layers.Dense(
     #        units=units,
