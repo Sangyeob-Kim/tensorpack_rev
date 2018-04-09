@@ -12,7 +12,7 @@ import numpy as np
 
 __all__ = ['sy_quantization']
 
-def Conv2D(
+def sy_quantization(
         inputs,
         after = 32
         ):
