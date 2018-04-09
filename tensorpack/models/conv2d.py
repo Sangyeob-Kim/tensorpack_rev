@@ -128,10 +128,10 @@ def Conv2D(
             b = min_range+(b*range_div_range_T)
             b = tf.clip_by_value(b,min_range,max_range)
 
-        inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-        inputs = (inputs+range_T_add_1_div_2)
-        inputs = min_range+(inputs*range_div_range_T)
-        inputs = tf.clip_by_value(inputs,min_range,max_range)
+        #inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+        #inputs = (inputs+range_T_add_1_div_2)
+        #inputs = min_range+(inputs*range_div_range_T)
+        #inputs = tf.clip_by_value(inputs,min_range,max_range)
 	
         W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
         W = (W+range_T_add_1_div_2)
