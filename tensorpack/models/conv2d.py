@@ -107,23 +107,14 @@ def Conv2D(
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
         inputs = tf.split(inputs, in_channel, channel_axis)
-        #print(inputs)
         kernels = W
-        #print("\nkernels1")
-        #print(kernels)
         kernels = tf.transpose(kernels, perm=[0,1,3,2])
-        #print("\nkernels2")
-        #print(kernels)
         kernels = tf.split(kernels, in_channel, 3)
-        #print("\nkernels3")
-        #print(kernels)
-        #print(kernels)
-        #outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                   #for i, k in zip(inputs, kernels)]
         count = 0
         before = 32
         tmp = 0.0 
         after_div2=after/2
+	
         for i in range(after-1):
 	        if((i-after_div2)<0):
 		        tmp+= 1.0/np.power(2,-i+after_div2)
