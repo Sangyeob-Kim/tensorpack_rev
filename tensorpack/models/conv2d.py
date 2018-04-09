@@ -123,6 +123,10 @@ def Conv2D(
 
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
+            b = tf.round((b - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+            b = (b+range_T_add_1_div_2)
+            b = min_range+(b*range_div_range_T)
+            b = tf.clip_by_value(b,min_range,max_range)
 
         inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
         inputs = (inputs+range_T_add_1_div_2)
@@ -134,10 +138,7 @@ def Conv2D(
         W = min_range+(W*range_div_range_T)
         W = tf.clip_by_value(W,min_range,max_range)
 
-        b = tf.round((b - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-        b = (b+range_T_add_1_div_2)
-        b = min_range+(b*range_div_range_T)
-        b = tf.clip_by_value(b,min_range,max_range)
+
 			
         inputs = tf.split(inputs, in_channel, channel_axis)
         kernels = W
