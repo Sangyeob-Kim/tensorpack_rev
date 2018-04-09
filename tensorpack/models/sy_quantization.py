@@ -11,7 +11,10 @@ from .tflayer import rename_get_variable, convert_to_tflayer_args
 import numpy as np
 
 __all__ = ['sy_quantization']
-
+@layer_register(log_shape=True)
+@convert_to_tflayer_args(
+    args_names=['after'],
+    name_mapping={'after': 'after'})
 def sy_quantization(
         inputs,
         after = 32
