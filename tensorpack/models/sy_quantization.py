@@ -25,7 +25,7 @@
 #        kernel_regularizer=None,
 #        bias_regularizer=None,
 #        activity_regularizer=None
-        ):
+#        ):
 
     #if after == 0:
     #   return inputs
@@ -66,9 +66,9 @@ __all__ = ['sy_quantization']
 @convert_to_tflayer_args(
     args_names=['units'],
     name_mapping={'out_dim': 'units'})
-def quantization(
+def sy_quantization(
         inputs,
-        units,
+        after,
         activation=None,
         use_bias=True,
         kernel_initializer=tf.contrib.layers.variance_scaling_initializer(2.0),
