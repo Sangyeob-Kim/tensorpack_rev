@@ -17,7 +17,14 @@ __all__ = ['sy_quantization']
     name_mapping={'after': 'after'})
 def sy_quantization(
         inputs,
-        after = 32
+        after = 32,
+	activation=None,
+        use_bias=True,
+        kernel_initializer=tf.contrib.layers.variance_scaling_initializer(2.0),
+        bias_initializer=tf.zeros_initializer(),
+        kernel_regularizer=None,
+        bias_regularizer=None,
+        activity_regularizer=None
         ):
 
     if after == 0:
@@ -46,7 +53,6 @@ def sy_quantization(
         inputs = (inputs+range_T_add_1_div_2)
         inputs = min_range+(inputs*range_div_range_T)
         inputs = tf.clip_by_value(inputs,min_range,max_range)
-
-    return inputs
+	return tf.identity(inputs, name='output')
 
 
