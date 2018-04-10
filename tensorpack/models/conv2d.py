@@ -11,7 +11,7 @@ from .tflayer import rename_get_variable, convert_to_tflayer_args
 import numpy as np
 from tensorflow.python.framework import function
 from tensorflow.python.framework import ops
-@ops.RegisterGradient("CustomGrad")
+@ops.RegisterGradient("CustomGrad_for_conv")
 def customGrad(op, grad):
     return [(0.001+grad)/(0.001+grad), tf.zeros(tf.shape(op.inputs[1]))]
 
