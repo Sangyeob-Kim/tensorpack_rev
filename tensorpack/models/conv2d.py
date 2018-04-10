@@ -83,7 +83,7 @@ def Conv2D(
             ret.variables.b = layer.bias
 
     else:
-        g = tf.get_default_graph()
+        G = tf.get_default_graph()
         # group conv implementation
         data_format = get_data_format(data_format, tfmode=False)
         in_shape = inputs.get_shape().as_list()
@@ -197,7 +197,17 @@ def Conv2D(
                     #k = tf.clip_by_value(k,min_range,max_range)	
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
                 #if (after != 32):
-                with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
+                with G.gradient_override_map({"Round": "Identity",
+                                "Minimum" : "CustomGrad",
+                                "Maximum" : "CustomGrad",
+                                "LessEqual" : "CustomGrad",
+                                "GreaterEqual" : "CustomGrad",
+                                "Select" : "Identity",
+                                "Reshape" : "Identity",
+                                "Sub": "CustomGrad",
+                                "Div": "CustomGrad",
+                                "Add": "CustomGrad",
+                                "Mul": "CustomGrad"}):
                     outputs2 = tf.round((outputs2 - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     outputs2 = (outputs2+range_T_add_1_div_2)
                     outputs2 = (outputs2*range_div_range_T)+min_range
