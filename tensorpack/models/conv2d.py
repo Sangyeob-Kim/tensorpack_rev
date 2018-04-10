@@ -77,7 +77,7 @@ def Conv2D(
             ret.variables.b = layer.bias
 
     else:
-	g = tf.get_default_graph()
+        g = tf.get_default_graph()
         # group conv implementation
         data_format = get_data_format(data_format, tfmode=False)
         in_shape = inputs.get_shape().as_list()
