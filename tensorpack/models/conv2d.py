@@ -182,7 +182,7 @@ def Conv2D(
                                 "Mul": "CustomGrad"}):
                     outputs = outputs - min_range
                     outputs = outputs * one_over_range_div_range_T
-                    outputs = outputs - range_T_add_1_div2
+                    outputs = outputs - range_T_add_1_div_2
                     outputs = tf.round(outputs)
                     outputs = (outputs+range_T_add_1_div_2)
                     outputs = (outputs*range_div_range_T)
@@ -215,7 +215,7 @@ def Conv2D(
 
                     outputs2 = outputs2 - min_range
                     outputs2 = outputs2 * one_over_range_div_range_T
-                    outputs2 = outputs2 - range_T_add_1_div2
+                    outputs2 = outputs2 - range_T_add_1_div_2
                     outputs2 = tf.round(outputs2)
                     outputs2 = (outputs2+range_T_add_1_div_2)
                     outputs2 = (outputs2*range_div_range_T)
@@ -237,7 +237,7 @@ def Conv2D(
                                 "Mul": "CustomGrad"}):
                     outputs = outputs - min_range
                     outputs = outputs * one_over_range_div_range_T
-                    outputs = outputs - range_T_add_1_div2
+                    outputs = outputs - range_T_add_1_div_2
                     outputs = tf.round(outputs)
                     outputs = (outputs+range_T_add_1_div_2)
                     outputs = (outputs*range_div_range_T)
