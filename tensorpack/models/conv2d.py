@@ -128,17 +128,17 @@ def Conv2D(
             #b = (b+range_T_add_1_div_2)
             #b = min_range+(b*range_div_range_T)
             #b = tf.clip_by_value(b,min_range,max_range)
-        with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
-            inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-            inputs = (inputs+range_T_add_1_div_2)
-            inputs = min_range+(inputs*range_div_range_T)
-            inputs = tf.clip_by_value(inputs,min_range,max_range)
+        #with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
+        #    inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+        #    inputs = (inputs+range_T_add_1_div_2)
+        #    inputs = min_range+(inputs*range_div_range_T)
+        #   inputs = tf.clip_by_value(inputs,min_range,max_range)
 
-        with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
-            W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-            W = (W+range_T_add_1_div_2)
-            W = min_range+(W*range_div_range_T)
-            W = tf.clip_by_value(W,min_range,max_range)
+        #ith g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
+        #   W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+        #   W = (W+range_T_add_1_div_2)
+        #   W = min_range+(W*range_div_range_T)
+        #   W = tf.clip_by_value(W,min_range,max_range)
 
 
 			
