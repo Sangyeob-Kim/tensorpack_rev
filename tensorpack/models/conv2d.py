@@ -9,6 +9,12 @@ from ..tfutils.common import get_tf_version_number
 from ..utils.argtools import shape2d, shape4d, get_data_format
 from .tflayer import rename_get_variable, convert_to_tflayer_args
 import numpy as np
+from tensorflow.python.framework import function
+from tensorflow.python.framework import ops
+@ops.RegisterGradient("CustomGrad")
+def customGrad(op, grad):
+    return [(0.001+grad)/(0.001+grad), tf.zeros(tf.shape(op.inputs[1]))]
+
 
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
 
@@ -163,7 +169,17 @@ def Conv2D(
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
   
                 #if (after != 32):
-                with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
+                with G.gradient_override_map({"Round": "Identity",
+                                "Minimum" : "CustomGrad",
+                                "Maximum" : "CustomGrad",
+                                "LessEqual" : "CustomGrad",
+                                "GreaterEqual" : "CustomGrad",
+                                "Select" : "Identity",
+                                "Reshape" : "Identity",
+                                "Sub": "CustomGrad",
+                                "Div": "CustomGrad",
+                                "Add": "CustomGrad",
+                                "Mul": "CustomGrad"}):
                     outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     outputs = (outputs+range_T_add_1_div_2)
                     outputs = min_range+(outputs*range_div_range_T)
@@ -184,15 +200,25 @@ def Conv2D(
                 with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
                     outputs2 = tf.round((outputs2 - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     outputs2 = (outputs2+range_T_add_1_div_2)
-                    outputs2 = min_range+(outputs2*range_div_range_T)
+                    outputs2 = (outputs2*range_div_range_T)+min_range
                     outputs2 = tf.clip_by_value(outputs2,min_range,max_range)
 
                 outputs = tf.add(outputs, outputs2)
                 #if (after != 32):
-                with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
+                with G.gradient_override_map({"Round": "Identity",
+                                "Minimum" : "CustomGrad",
+                                "Maximum" : "CustomGrad",
+                                "LessEqual" : "CustomGrad",
+                                "GreaterEqual" : "CustomGrad",
+                                "Select" : "Identity",
+                                "Reshape" : "Identity",
+                                "Sub": "CustomGrad",
+                                "Div": "CustomGrad",
+                                "Add": "CustomGrad",
+                                "Mul": "CustomGrad"}):
                     outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     outputs = (outputs+range_T_add_1_div_2)
-                    outputs = min_range+(outputs*range_div_range_T)
+                    outputs = (outputs*range_div_range_T)+min_range
                     outputs = tf.clip_by_value(outputs,min_range,max_range)
             count+=1
 
