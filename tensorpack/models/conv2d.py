@@ -190,10 +190,10 @@ def Conv2D(
                 outputs = tf.add(outputs, outputs2)
                 #if (after != 32):
                 with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
-                outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-                outputs = (outputs+range_T_add_1_div_2)
-                outputs = min_range+(outputs*range_div_range_T)
-                outputs = tf.clip_by_value(outputs,min_range,max_range)
+                    outputs = tf.round((outputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+                    outputs = (outputs+range_T_add_1_div_2)
+                    outputs = min_range+(outputs*range_div_range_T)
+                    outputs = tf.clip_by_value(outputs,min_range,max_range)
             count+=1
 
         conv = outputs
