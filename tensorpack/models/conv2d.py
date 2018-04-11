@@ -167,16 +167,16 @@ def Conv2D(
   
                #if (after != 0):
                 with G.gradient_override_map({"Round": "Identity",
-                                "Minimum" : "CustomGrad",
-                                "Maximum" : "CustomGrad",
-                                "LessEqual" : "CustomGrad",
-                                "GreaterEqual" : "CustomGrad",
+                                "Minimum" : "Add",
+                                "Maximum" : "Add",
+                                "LessEqual" : "Add",
+                                "GreaterEqual" : "Add",
                                 "Select" : "Identity",
                                 "Reshape" : "Identity",
-                                "Sub": "CustomGrad",
-                                "Div": "CustomGrad",
-                                "Add": "CustomGrad",
-                                "Mul": "CustomGrad"}):
+                                "Sub": "Add",
+                                "Div": "Add",
+                                "Add": "Add",
+                                "Mul": "Add"}):
                     outputs = outputs - min_range
                     outputs = outputs * one_over_range_div_range_T
                     outputs = outputs - range_T_add_1_div_2
@@ -199,16 +199,16 @@ def Conv2D(
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 #                if (after != 0):
                 with G.gradient_override_map({"Round": "Identity",
-                                "Minimum" : "CustomGrad",
-                                "Maximum" : "CustomGrad",
-                                "LessEqual" : "CustomGrad",
-                                "GreaterEqual" : "CustomGrad",
+                                "Minimum" : "Add",
+                                "Maximum" : "Add",
+                                "LessEqual" : "Add",
+                                "GreaterEqual" : "Add",
                                 "Select" : "Identity",
                                 "Reshape" : "Identity",
-                                "Sub": "CustomGrad",
-                                "Div": "CustomGrad",
-                                "Add": "CustomGrad",
-                                "Mul": "CustomGrad"}):
+                                "Sub": "Add",
+                                "Div": "Add",
+                                "Add": "Add",
+                                "Mul": "Add"}):
 
                      outputs2 = outputs2 - min_range
                      outputs2 = outputs2 * one_over_range_div_range_T
@@ -222,16 +222,16 @@ def Conv2D(
                 outputs = tf.add(outputs, outputs2)
 #                if (after != 0):
                 with G.gradient_override_map({"Round": "Identity",
-                                "Minimum" : "CustomGrad",
-                                "Maximum" : "CustomGrad",
-                                "LessEqual" : "CustomGrad",
-                                "GreaterEqual" : "CustomGrad",
+                                "Minimum" : "Add",
+                                "Maximum" : "Add",
+                                "LessEqual" : "Add",
+                                "GreaterEqual" : "Add",
                                 "Select" : "Identity",
                                 "Reshape" : "Identity",
-                                "Sub": "CustomGrad",
-                                "Div": "CustomGrad",
-                                "Add": "CustomGrad",
-                                "Mul": "CustomGrad"}):
+                                "Sub": "Add",
+                                "Div": "Add",
+                                "Add": "Add",
+                                "Mul": "Add"}):
                      outputs = outputs - min_range
                      outputs = outputs * one_over_range_div_range_T
                      outputs = outputs - range_T_add_1_div_2
