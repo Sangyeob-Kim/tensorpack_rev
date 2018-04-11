@@ -13,7 +13,7 @@ from tensorflow.python.framework import function
 from tensorflow.python.framework import ops
 @ops.RegisterGradient("CustomGrad_for_conv")
 def customGrad(op, grad):
-    return [(0.001+grad)/(0.001+grad), tf.zeros(tf.shape(op.inputs[1]))]
+    return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
 
 
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
