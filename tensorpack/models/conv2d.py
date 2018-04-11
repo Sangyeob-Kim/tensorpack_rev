@@ -76,7 +76,7 @@ def Conv2D(
         channel_axis = 3 if data_format == 'NHWC' else 1
         in_channel = in_shape[channel_axis]
         assert in_channel is not None, "[Conv2D] Input cannot have unknown channel!"
-        assert in_channel % split == 0
+        #assert in_channel % split == 0
 
         assert kernel_regularizer is None and bias_regularizer is None and activity_regularizer is None, \
             "Not supported by group conv now!"
@@ -98,7 +98,31 @@ def Conv2D(
 
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
-
+            
+        after = 32
+        before = 32
+        tmp = 0.0 
+        after_div2=after/2
+	
+        for i in range(after-1):
+	        if((i-after_div2)<0):
+		        tmp+= 1.0/np.power(2,-i+after_div2)
+	        else:
+		        tmp += np.power(2,i-after_div2)
+        max_range = tmp
+        min_range = -1.0*np.power(2,after_div2-1) 
+        range_T = np.power(2,after-1) * 2.0 - 1.0
+        range_T_add_1_div_2 = (range_T + 1.0)/2.0
+        range_target = max_range - min_range
+        range_div_range_T = range_target/range_T
+        one_over_range_div_range_T =1/ range_div_range_T
+  
+        #with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
+        #    inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
+        #    inputs = (inputs+range_T_add_1_div_2)
+        #    inputs = min_range+(inputs*range_div_range_T)
+        #   inputs = tf.clip_by_value(inputs,min_range,max_range)
+        
         inputs = tf.split(inputs, in_channel, channel_axis)
         #print(inputs)
         kernels = W
