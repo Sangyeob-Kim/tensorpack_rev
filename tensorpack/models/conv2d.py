@@ -12,7 +12,7 @@ import numpy as np
 from tensorflow.python.framework import function
 from tensorflow.python.framework import ops
 
-after2 = 2
+
 
 @tf.RegisterGradient("CustomGrad_for_conv")
 def customGrad(op, x):
