@@ -180,11 +180,11 @@ def Conv2D(
         tmp = 0.0 
         after_div2=after/2
 	
-        for i in range(after-1):
-	        if((i-after_div2)<0):
-		        tmp+= 1.0/np.power(2,-i+after_div2)
-	        else:
-		        tmp += np.power(2,i-after_div2)
+        #for i in range(after-1):
+	#        if((i-after_div2)<0):
+	#	        tmp+= 1.0/np.power(2,-i+after_div2)
+	#        else:
+	#	        tmp += np.power(2,i-after_div2)
 
         max_range = tmp
         min_range = -1.0*np.power(2,after_div2-1) 
@@ -194,6 +194,10 @@ def Conv2D(
         range_div_range_T = range_target/range_T
         one_over_range_div_range_T =1/ range_div_range_T
 
+        tmp = 0
+        for i in range(after-1):
+            tmp+= 1.0/np.power(2,i)
+    
         W = tf.get_variable(
             'W', filter_shape, initializer=kernel_initializer)
 
@@ -249,15 +253,24 @@ def Conv2D(
                                 "Sub": "Add",
                                 "Div": "Add",
                                 "Add": "Add",
+                                "Sign" : "Identity",
+                                "Abs" : "Identity",
+                                "Floor" : "Identity",
                                 "Mul": "Add"}):
-                    outputs = outputs - min_range
-                    outputs = outputs * one_over_range_div_range_T
-                    outputs = outputs - range_T_add_1_div_2
-                    outputs = tf.round(outputs)
-                    outputs = (outputs+range_T_add_1_div_2)
-                    outputs = (outputs*range_div_range_T)
-                    outputs = outputs+min_range
-                    outputs = tf.clip_by_value(outputs,min_range,max_range)
+                    #outputs = outputs - min_range
+                    #outputs = outputs * one_over_range_div_range_T
+                    #outputs = outputs - range_T_add_1_div_2
+                    #outputs = tf.round(outputs)
+                    #outputs = (outputs+range_T_add_1_div_2)
+                    #outputs = (outputs*range_div_range_T)
+                    #outputs = outputs+min_range
+                    #outputs = tf.clip_by_value(outputs,min_range,max_range)
+                    y = tf.sign(outputs)
+                    outputs = tf.abs(outputs)
+                    outputs = tf.floor(outputs / (1/np.power(2,after-2)))
+                    outputs = outputs * (1.0/np.power(2,after-2))
+                    outputs = tf.clip_by_value(outputs,1.0/np.power(2,after-2),tmp)
+                    outputs = outputs*y
 		
             else:
                 #if (after != 32):
@@ -284,22 +297,29 @@ def Conv2D(
                                 "Sub": "Add",
                                 "Div": "Add",
                                 "Add": "Add",
+                                "Sign" : "Identity",
+                                "Abs" : "Identity",
+                                "Floor" : "Identity",
                                 "Mul": "Add"}):
-
-                     outputs2 = outputs2 - min_range
-                     outputs2 = outputs2 * one_over_range_div_range_T
-                     outputs2 = outputs2 - range_T_add_1_div_2
-                     outputs2 = tf.round(outputs2)
-                     outputs2 = (outputs2+range_T_add_1_div_2)
-                     outputs2 = (outputs2*range_div_range_T)
-                     outputs2 = outputs2+min_range
-                     outputs2 = tf.clip_by_value(outputs2,min_range,max_range)
+                    #outputs = outputs - min_range
+                    #outputs = outputs * one_over_range_div_range_T
+                    #outputs = outputs - range_T_add_1_div_2
+                    #outputs = tf.round(outputs)
+                    #outputs = (outputs+range_T_add_1_div_2)
+                    #outputs = (outputs*range_div_range_T)
+                    #outputs = outputs+min_range
+                    #outputs = tf.clip_by_value(outputs,min_range,max_range)
+                    y = tf.sign(outputs2)
+                    outputs2 = tf.abs(outputs2)
+                    outputs2 = tf.floor(outputs2 / (1/np.power(2,after-2)))
+                    outputs2 = outputs2 * (1.0/np.power(2,after-2))
+                    outputs2 = tf.clip_by_value(outputs2,1.0/np.power(2,after-2),tmp)
+                    outputs2 = outputs2*y
 
                 outputs = tf.add(outputs, outputs2)
 #                if (after != 0):
                 #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
                 #    outputs = tf.identity(outputs)
-			
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Add",
                                 "Maximum" : "Add",
@@ -310,15 +330,24 @@ def Conv2D(
                                 "Sub": "Add",
                                 "Div": "Add",
                                 "Add": "Add",
+                                "Sign" : "Identity",
+                                "Abs" : "Identity",
+                                "Floor" : "Identity",
                                 "Mul": "Add"}):
-                     outputs = outputs - min_range
-                     outputs = outputs * one_over_range_div_range_T
-                     outputs = outputs - range_T_add_1_div_2
-                     outputs = tf.round(outputs)
-                     outputs = (outputs+range_T_add_1_div_2)
-                     outputs = (outputs*range_div_range_T)
-                     outputs = outputs+min_range
-                     outputs = tf.clip_by_value(outputs,min_range,max_range)
+                    #outputs = outputs - min_range
+                    #outputs = outputs * one_over_range_div_range_T
+                    #outputs = outputs - range_T_add_1_div_2
+                    #outputs = tf.round(outputs)
+                    #outputs = (outputs+range_T_add_1_div_2)
+                    #outputs = (outputs*range_div_range_T)
+                    #outputs = outputs+min_range
+                    #outputs = tf.clip_by_value(outputs,min_range,max_range)
+                    y = tf.sign(outputs)
+                    outputs = tf.abs(outputs)
+                    outputs = tf.floor(outputs / (1/np.power(2,after-2)))
+                    outputs = outputs * (1.0/np.power(2,after-2))
+                    outputs = tf.clip_by_value(outputs,1.0/np.power(2,after-2),tmp)
+                    outputs = outputs*y
             count+=1
 
         conv = outputs
