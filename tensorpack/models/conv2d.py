@@ -11,9 +11,26 @@ from .tflayer import rename_get_variable, convert_to_tflayer_args
 import numpy as np
 from tensorflow.python.framework import function
 from tensorflow.python.framework import ops
-@ops.RegisterGradient("CustomGrad_for_conv")
+
+after2 = 0
+
+@tf.RegisterGradient("CustomGrad_for_conv")
 def customGrad(op, grad):
-    return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
+    before = 32
+    tmp = 0.0 
+    after_div2=after2/2
+
+    tmp = 0
+    for i in range(after2-1):
+        tmp+= 1.0/np.power(2,i)
+
+    y = tf.sign(x)
+    x = tf.abs(x)
+    x = tf.floor(x / (1/np.power(2,after2-2)))
+    x = x * (1.0/np.power(2,after2-2))
+    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    return x
+    #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
 
 
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
@@ -105,6 +122,7 @@ def Conv2D(
             kwargs['dilations'] = shape4d(dilation_rate, data_format=data_format)
        
         before = 32
+        after2 = after
         tmp = 0.0 
         after_div2=after/2
 	
@@ -164,7 +182,8 @@ def Conv2D(
                     #k = tf.clip_by_value(k,min_range,max_range)
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-  
+                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"}):
+                    outputs = outputs + 0
                #if (after != 0):
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Add",
@@ -198,6 +217,9 @@ def Conv2D(
                     #k = tf.clip_by_value(k,min_range,max_range)	
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 #                if (after != 0):
+                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"}):
+                    outputs2 = outputs2 + 0
+			
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Add",
                                 "Maximum" : "Add",
@@ -221,6 +243,9 @@ def Conv2D(
 
                 outputs = tf.add(outputs, outputs2)
 #                if (after != 0):
+                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"}):
+                    outputs = outputs + 0
+			
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Add",
                                 "Maximum" : "Add",
