@@ -12,27 +12,6 @@ import numpy as np
 from tensorflow.python.framework import function
 from tensorflow.python.framework import ops
 
-
-
-@tf.RegisterGradient("CustomGrad_for_conv")
-def customGrad(op, x):
-    before = 32
-    tmp = 0.0 
-    after_div2=after2/2
-
-    tmp = 0
-    for i in range(after2-1):
-        tmp+= 1.0/np.power(2,i)
-
-    y = tf.sign(x)
-    x = tf.abs(x)
-    x = tf.floor(x / (1/np.power(2,after2-2)))
-    x = x * (1.0/np.power(2,after2-2))
-    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
-    return x
-    #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
-
-
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
 
 
@@ -277,6 +256,23 @@ def Conv2D(
             ret.variables.b = b
     return ret
 
+@tf.RegisterGradient("CustomGrad_for_conv")
+def customGrad(op, x):
+    before = 32
+    tmp = 0.0 
+    after_div2=after2/2
+
+    tmp = 0
+    for i in range(after2-1):
+        tmp+= 1.0/np.power(2,i)
+
+    y = tf.sign(x)
+    x = tf.abs(x)
+    x = tf.floor(x / (1/np.power(2,after2-2)))
+    x = x * (1.0/np.power(2,after2-2))
+    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    return x
+    #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
 
 @layer_register(log_shape=True)
 @convert_to_tflayer_args(
