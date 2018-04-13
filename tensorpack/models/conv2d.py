@@ -14,6 +14,78 @@ from tensorflow.python.framework import ops
 
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
 
+@tf.RegisterGradient("CustomGrad_for_conv_32bit")
+def customGrad(op, x):
+    before = 32
+    after = 32
+    tmp = 0.0 
+    after2 = after
+    after_div2=after2/2
+    tmp = 0
+    for i in range(after2-1):
+        tmp+= 1.0/np.power(2,i)
+
+    y = tf.sign(x)
+    x = tf.abs(x)
+    x = tf.floor(x / (1/np.power(2,after2-2)))
+    x = x * (1.0/np.power(2,after2-2))
+    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    return x
+    #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
+
+@tf.RegisterGradient("CustomGrad_for_conv_16bit")
+def customGrad(op, x):
+    before = 32
+    after = 16
+    tmp = 0.0 
+    after2 = after
+    after_div2=after2/2
+    tmp = 0
+    for i in range(after2-1):
+        tmp+= 1.0/np.power(2,i)
+
+    y = tf.sign(x)
+    x = tf.abs(x)
+    x = tf.floor(x / (1/np.power(2,after2-2)))
+    x = x * (1.0/np.power(2,after2-2))
+    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    return x
+
+@tf.RegisterGradient("CustomGrad_for_conv_8bit")
+def customGrad(op, x):
+    before = 32
+    after = 8
+    tmp = 0.0 
+    after2 = after
+    after_div2=after2/2
+    tmp = 0
+    for i in range(after2-1):
+        tmp+= 1.0/np.power(2,i)
+
+    y = tf.sign(x)
+    x = tf.abs(x)
+    x = tf.floor(x / (1/np.power(2,after2-2)))
+    x = x * (1.0/np.power(2,after2-2))
+    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    return x
+
+@tf.RegisterGradient("CustomGrad_for_conv_4bit")
+def customGrad(op, x):
+    before = 32
+    after = 4
+    tmp = 0.0 
+    after2 = after
+    after_div2=after2/2
+    tmp = 0
+    for i in range(after2-1):
+        tmp+= 1.0/np.power(2,i)
+
+    y = tf.sign(x)
+    x = tf.abs(x)
+    x = tf.floor(x / (1/np.power(2,after2-2)))
+    x = x * (1.0/np.power(2,after2-2))
+    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    return x
 @layer_register(log_shape=True)
 @convert_to_tflayer_args(
     args_names=['filters', 'kernel_size'],
@@ -42,23 +114,6 @@ def Conv2D(
         after = 32
         ):
 	
-    @tf.RegisterGradient("CustomGrad_for_conv")
-    def customGrad(op, x):
-        before = 32
-        tmp = 0.0 
-        after2 = after
-        after_div2=after2/2
-        tmp = 0
-        for i in range(after2-1):
-            tmp+= 1.0/np.power(2,i)
-
-        y = tf.sign(x)
-        x = tf.abs(x)
-        x = tf.floor(x / (1/np.power(2,after2-2)))
-        x = x * (1.0/np.power(2,after2-2))
-        x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
-        return x
-        #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
     """
     A wrapper around `tf.layers.Conv2D`.
     Some differences to maintain backward-compatibility:
@@ -177,7 +232,7 @@ def Conv2D(
                     #k = tf.clip_by_value(k,min_range,max_range)
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"}):
+                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"+str(after)+"}):
                     outputs = outputs + 0
                #if (after != 0):
                 with G.gradient_override_map({"Round": "Identity",
@@ -212,7 +267,7 @@ def Conv2D(
                     #k = tf.clip_by_value(k,min_range,max_range)	
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 #                if (after != 0):
-                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"}):
+                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"+str(after)+"}):
                     outputs2 = outputs2 + 0
 			
                 with G.gradient_override_map({"Round": "Identity",
@@ -238,7 +293,7 @@ def Conv2D(
 
                 outputs = tf.add(outputs, outputs2)
 #                if (after != 0):
-                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"}):
+                with G.gradient_override_map({"Add" : "CustomGrad_for_conv"+str(after)+"}):
                     outputs = outputs + 0
 			
                 with G.gradient_override_map({"Round": "Identity",
