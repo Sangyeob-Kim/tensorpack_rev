@@ -15,7 +15,7 @@ from tensorflow.python.framework import ops
 after2 = 0
 
 @tf.RegisterGradient("CustomGrad_for_conv")
-def customGrad(op, grad):
+def customGrad(op, x):
     before = 32
     tmp = 0.0 
     after_div2=after2/2
