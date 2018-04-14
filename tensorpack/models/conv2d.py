@@ -34,6 +34,26 @@ def customGrad(op, x):
     return x
     #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
 
+@tf.RegisterGradient("CustomGrad_for_conv_24bit")
+def customGrad(op, x):
+    before = 32
+    after = 24
+    tmp = 0.0 
+    after2 = after
+    after_div2=after2/2
+    tmp = 0
+    for i in range(after2-1):
+        tmp+= 1.0/np.power(2,i)
+
+    y = tf.sign(x)
+    x = tf.abs(x)
+    x = tf.floor(x / (1/np.power(2,after2-2)))
+    x = x * (1.0/np.power(2,after2-2))
+    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    x = y*x
+    return x
+    #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
+	
 @tf.RegisterGradient("CustomGrad_for_conv_16bit")
 def customGrad(op, x):
     before = 32
