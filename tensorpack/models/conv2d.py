@@ -135,7 +135,8 @@ def Conv2D(
         activity_regularizer=None,
         split=1,
         quantization=1,
-        after = 32
+        after = 32,
+	g_after = 32
         ):
 	
     """
@@ -259,8 +260,10 @@ def Conv2D(
                     #k = min_range+(k*range_div_range_T)
                     #k = tf.clip_by_value(k,min_range,max_range)
 
-                #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
-                #    outputs = tf.identity(outputs)
+                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
+                    i = tf.identity(i)
+                    k = tf.identity(k)
+		
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 
@@ -304,8 +307,9 @@ def Conv2D(
                     #k = (k+range_T_add_1_div_2)
                     #k = min_range+(k*range_div_range_T)
                     #k = tf.clip_by_value(k,min_range,max_range)
-                #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
-                #    outputs2 = tf.identity(outputs2)
+                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
+                    i = tf.identity(i)
+                    k = tf.identity(k)
 		
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 #                if (after != 0):
