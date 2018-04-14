@@ -258,10 +258,12 @@ def Conv2D(
                     #k = (k+range_T_add_1_div_2)
                     #k = min_range+(k*range_div_range_T)
                     #k = tf.clip_by_value(k,min_range,max_range)
+
+                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
+                    outputs = tf.identity(outputs)
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
-                #    outputs = tf.identity(outputs)
+
                #if (after != 0):
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Add",
@@ -301,11 +303,13 @@ def Conv2D(
                     #k = tf.round((k - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
                     #k = (k+range_T_add_1_div_2)
                     #k = min_range+(k*range_div_range_T)
-                    #k = tf.clip_by_value(k,min_range,max_range)	
+                    #k = tf.clip_by_value(k,min_range,max_range)
+                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
+                    outputs2 = tf.identity(outputs2)
+		
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 #                if (after != 0):
-                #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
-                #    outputs2 = tf.identity(outputs2)
+
 			
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Add",
@@ -335,11 +339,12 @@ def Conv2D(
                     #outputs2 = outputs2 * (1.0/np.power(2,after-2))
                     #outputs2 = tf.clip_by_value(outputs2,1.0/np.power(2,after-2),tmp)
                     #outputs2 = outputs2*y
-
+                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
+                    outputs = tf.identity(outputs)
+		
                 outputs = tf.add(outputs, outputs2)
 #                if (after != 0):
-                #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
-                #    outputs = tf.identity(outputs)
+
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Add",
                                 "Maximum" : "Add",
