@@ -202,7 +202,7 @@ def Conv2D(
 	
         after2 = after
         after_div2=after2/2
-        tmp = 0
+
         for i in range(after2-1):
             if(i-f_part<0):
                 tmp+= 1.0/np.power(2,-i+f_part)
