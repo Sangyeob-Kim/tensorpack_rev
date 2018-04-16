@@ -272,14 +272,14 @@ def Conv2D(
                                 "Div": "Add",
                                 "Add": "Add",
                                 "Mul": "Add"}):
-                    outputs = outputs - min_range
-                    outputs = outputs * one_over_range_div_range_T
-                    outputs = outputs - range_T_add_1_div_2
-                    outputs = tf.round(outputs)
-                    outputs = (outputs+range_T_add_1_div_2)
-                    outputs = (outputs*range_div_range_T)
-                    outputs = outputs+min_range
-                    outputs = tf.clip_by_value(outputs,min_range,max_range)
+                    inputs = inputs - min_range
+                    inputs = inputs * one_over_range_div_range_T
+                    inputs = inputs - range_T_add_1_div_2
+                    inputs = tf.round(inputs)
+                    inputs = (inputs+range_T_add_1_div_2)
+                    inputs = (inputs*range_div_range_T)
+                    inputs = inputs+min_range
+                    inputs = tf.clip_by_value(inputs,min_range,max_range)
         #ith g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
         #   W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
         #   W = (W+range_T_add_1_div_2)
