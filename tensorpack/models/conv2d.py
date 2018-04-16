@@ -209,7 +209,7 @@ def Conv2D(
             else:
                 tmp+= np.power(2,i-f_part)
 
-        min = 1/np.power(1,f_part)
+        min = 1/np.power(2,f_part)
 	
         W = tf.get_variable(
             'W', filter_shape, initializer=kernel_initializer)
