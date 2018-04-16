@@ -209,7 +209,8 @@ def Conv2D(
                 tmp+= np.power(2,i-f_part)
 
         min = 1.0/np.power(2,f_part)
-	
+        print(tmp)
+        print(min)
         W = tf.get_variable(
             'W', filter_shape, initializer=kernel_initializer)
 
@@ -224,26 +225,26 @@ def Conv2D(
         #    inputs = (inputs+range_T_add_1_div_2)
         #    inputs = min_range+(inputs*range_div_range_T)
         #   inputs = tf.clip_by_value(inputs,min_range,max_range)
-#         with G.gradient_override_map({"Round": "Identity",
-#                         "Minimum" : "Add",
-#                         "Maximum" : "Add",
-#                         "LessEqual" : "Add",
-#                         "GreaterEqual" : "Add",
-#                         "Select" : "Identity",
-#                         "Reshape" : "Identity",
-#                         "Sub": "Add",
-#                         "Div": "Add",
-#                         "Add": "Add",
-#                         "Sign" : "Identity",
-#                         "Abs" : "Identity",
-#                         "Floor" : "Identity",
-#                         "Mul": "Add"}):
-#             y = tf.sign(inputs)
-#             inputs = tf.abs(inputs)
-#             inputs = tf.floor(inputs / min)
-#             inputs = inputs * min
-#             inputs = tf.clip_by_value(inputs,min,tmp)
-#             inputs = inputs*y
+        with G.gradient_override_map({"Round": "Identity",
+                        "Minimum" : "Add",
+                        "Maximum" : "Add",
+                        "LessEqual" : "Add",
+                        "GreaterEqual" : "Add",
+                        "Select" : "Identity",
+                        "Reshape" : "Identity",
+                        "Sub": "Add",
+                        "Div": "Add",
+                        "Add": "Add",
+                        "Sign" : "Identity",
+                        "Abs" : "Identity",
+                        "Floor" : "Identity",
+                        "Mul": "Add"}):
+            y = tf.sign(inputs)
+            inputs = tf.abs(inputs)
+            inputs = tf.floor(inputs / min)
+            inputs = inputs * min
+            inputs = tf.clip_by_value(inputs,min,tmp)
+            inputs = inputs*y
         #ith g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
         #   W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
         #   W = (W+range_T_add_1_div_2)
