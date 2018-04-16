@@ -135,7 +135,7 @@ def Conv2D(
         activity_regularizer=None,
         split=1,
         after = 32,
-        f_part = after-2,
+        f_part = 30,
 	g_after = 32
         ):
 	
