@@ -303,6 +303,8 @@ def Conv2D(
                                 "Sign" : "Identity",
                                 "Abs" : "Identity",
                                 "Floor" : "Identity",
+                                "Div" : "Jump",
+                       	        "RealDiv" : "Jump",
                                 "Mul": "Jump"}):
                     y = tf.sign(outputs)
                     outputs = tf.abs(outputs)
@@ -331,6 +333,8 @@ def Conv2D(
                                 "Sign" : "Identity",
                                 "Abs" : "Identity",
                                 "Floor" : "Identity",
+                                "Div" : "Jump",
+                       	        "RealDiv" : "Jump",
                                 "Mul": "Jump"}):
                     y = tf.sign(outputs2)
                     outputs2 = tf.abs(outputs2)
@@ -355,6 +359,8 @@ def Conv2D(
                                 "Sign" : "Identity",
                                 "Abs" : "Identity",
                                 "Floor" : "Identity",
+                                "Div" : "Jump",
+                       	        "RealDiv" : "Jump",
                                 "Mul": "Jump"}):
                     y = tf.sign(outputs)
                     outputs = tf.abs(outputs)
