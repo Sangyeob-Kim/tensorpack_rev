@@ -14,6 +14,10 @@ from tensorflow.python.framework import ops
 
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
 
+@ops.RegisterGradient("Jump")
+def customGrad(op, grad):
+    return [None, grad]
+
 @tf.RegisterGradient("CustomGrad_for_conv_32bit")
 def customGrad(op, x):
     before = 32
@@ -242,27 +246,29 @@ def Conv2D(
         #    inputs = min_range+(inputs*range_div_range_T)
         #   inputs = tf.clip_by_value(inputs,min_range,max_range)
         with G.gradient_override_map({"Round": "Identity",
-                        "Minimum" : "Add",
-                        "Maximum" : "Add",
-                        "LessEqual" : "Add",
-                        "GreaterEqual" : "Add",
+                        "Minimum" : "Jump",
+                        "Maximum" : "Jump",
+                        "LessEqual" : "Jump",
+                        "GreaterEqual" : "Jump",
                         "Select" : "Identity",
                         "Reshape" : "Identity",
-                        "Sub": "Add",
-                        "Div": "Add",
-                        "Add": "Add",
+                        "Sub": "Jump",
+                        "Div": "Jump",
+                        "Add": "Jump",
                         "Sign" : "Identity",
                         "Abs" : "Identity",
                         "Floor" : "Identity",
-                        "Mul": "Add"}):
-            inputs = tf.Print(inputs,[inputs[0]])
+                       	"Div" : "Jump",
+                       	"RealDiv" : "Jump",      
+                        "Mul": "Jump"}):
+            #inputs = tf.Print(inputs,[inputs[0]])
             y = tf.sign(inputs)
             inputs = tf.abs(inputs)
             inputs = tf.floor(inputs / ((min)*np.power(2,10)))
             inputs = inputs * ((min)*np.power(2,10))
             #inputs = tf.clip_by_value(inputs,min,tmp)
             inputs = inputs*y
-            inputs = tf.Print(inputs,[inputs[0]])
+            #inputs = tf.Print(inputs,[inputs[0]])
 #         with G.gradient_override_map({"Round": "Identity",
 #                                 "Minimum" : "Add",
 #                                 "Maximum" : "Add",
