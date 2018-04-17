@@ -255,12 +255,14 @@ def Conv2D(
                         "Abs" : "Identity",
                         "Floor" : "Identity",
                         "Mul": "Add"}):
+            inputs = tf.Print(inputs,[inputs[0]])
             y = tf.sign(inputs)
             inputs = tf.abs(inputs)
             inputs = tf.floor(inputs / ((min)*np.power(2,10)))
             inputs = inputs * ((min)*np.power(2,10))
             #inputs = tf.clip_by_value(inputs,min,tmp)
             inputs = inputs*y
+            inputs = tf.Print(inputs,[inputs[0]])
 #         with G.gradient_override_map({"Round": "Identity",
 #                                 "Minimum" : "Add",
 #                                 "Maximum" : "Add",
