@@ -261,7 +261,7 @@ def Conv2D(
                        	"Div" : "Jump",
                        	"RealDiv" : "Jump",      
                         "Mul": "Jump"}):
-            inputs = tf.Print(inputs,[inputs[0]])
+            #inputs = tf.Print(inputs,[inputs[0]])
             tf.summary.histogram(inputs.name, inputs)
             y = tf.sign(inputs)
             inputs = tf.abs(inputs)
@@ -269,7 +269,7 @@ def Conv2D(
             inputs = inputs * (min)
             inputs = tf.clip_by_value(inputs,min,tmp)
             inputs = inputs*y
-            inputs = tf.Print(inputs,[inputs[0]])
+            #inputs = tf.Print(inputs,[inputs[0]])
 
         #ith g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
         #   W = tf.round((W - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
