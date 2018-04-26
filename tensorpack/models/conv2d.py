@@ -285,7 +285,7 @@ def Conv2D(
 	
         for i, k in zip(inputs, kernels):
             if(count==0):
-                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
+#                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
 #                     i = tf.identity(i)
 #                     k = tf.identity(k)
 		
@@ -315,9 +315,9 @@ def Conv2D(
 #                     outputs = outputs*y
 		
             else:
-                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
-                    i = tf.identity(i)
-                    k = tf.identity(k)
+#                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
+#                     i = tf.identity(i)
+#                     k = tf.identity(k)
 		
                 outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 
