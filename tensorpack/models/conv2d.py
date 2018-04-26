@@ -245,30 +245,30 @@ def Conv2D(
         #    inputs = (inputs+range_T_add_1_div_2)
         #    inputs = min_range+(inputs*range_div_range_T)
         #   inputs = tf.clip_by_value(inputs,min_range,max_range)
-        with G.gradient_override_map({"Round": "Identity",
-                        "Minimum" : "Jump",
-                        "Maximum" : "Jump",
-                        "LessEqual" : "Jump",
-                        "GreaterEqual" : "Jump",
-                        "Select" : "Identity",
-                        "Reshape" : "Identity",
-                        "Sub": "Jump",
-                        "Div": "Jump",
-                        "Add": "Jump",
-                        "Sign" : "Identity",
-                        "Abs" : "Identity",
-                        "Floor" : "Identity",
-                       	"Div" : "Jump",
-                       	"RealDiv" : "Jump",      
-                        "Mul": "Jump"}):
-            #inputs = tf.Print(inputs,[inputs[0]])
-            tf.summary.histogram(inputs.name, inputs)
-            y = tf.sign(inputs)
-            inputs = tf.abs(inputs)
-            inputs = tf.floor(inputs / min)
-            inputs = inputs * (min)
-            inputs = tf.clip_by_value(inputs,0,tmp)
-            inputs = inputs*y
+#         with G.gradient_override_map({"Round": "Identity",
+#                         "Minimum" : "Jump",
+#                         "Maximum" : "Jump",
+#                         "LessEqual" : "Jump",
+#                         "GreaterEqual" : "Jump",
+#                         "Select" : "Identity",
+#                         "Reshape" : "Identity",
+#                         "Sub": "Jump",
+#                         "Div": "Jump",
+#                         "Add": "Jump",
+#                         "Sign" : "Identity",
+#                         "Abs" : "Identity",
+#                         "Floor" : "Identity",
+#                        	"Div" : "Jump",
+#                        	"RealDiv" : "Jump",      
+#                         "Mul": "Jump"}):
+#             #inputs = tf.Print(inputs,[inputs[0]])
+#             tf.summary.histogram(inputs.name, inputs)
+#             y = tf.sign(inputs)
+#             inputs = tf.abs(inputs)
+#             inputs = tf.floor(inputs / min)
+#             inputs = inputs * (min)
+#             inputs = tf.clip_by_value(inputs,0,tmp)
+#             inputs = inputs*y
             #inputs = tf.Print(inputs,[inputs[0]])
 
         #ith g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
@@ -286,8 +286,8 @@ def Conv2D(
         for i, k in zip(inputs, kernels):
             if(count==0):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
-                    i = tf.identity(i)
-                    k = tf.identity(k)
+#                     i = tf.identity(i)
+#                     k = tf.identity(k)
 		
                 outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
 
