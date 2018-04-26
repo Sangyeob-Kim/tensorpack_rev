@@ -33,7 +33,7 @@ def customGrad(op, x):
     x = tf.abs(x)
     x = tf.floor(x / (1/np.power(2,after2-2)))
     x = x * (1.0/np.power(2,after2-2))
-    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    x = tf.clip_by_value(x,0,tmp)
     x = y*x
     return x
     #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
@@ -53,7 +53,7 @@ def customGrad(op, x):
     x = tf.abs(x)
     x = tf.floor(x / (1/np.power(2,after2-2)))
     x = x * (1.0/np.power(2,after2-2))
-    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    x = tf.clip_by_value(x,0,tmp)
     x = y*x
     return x
     #return [tf.ones(tf.shpae(grad)), tf.zeros(tf.shape(op.inputs[1]))]
@@ -73,7 +73,7 @@ def customGrad(op, x):
     x = tf.abs(x)
     x = tf.floor(x / (1/np.power(2,after2-2)))
     x = x * (1.0/np.power(2,after2-2))
-    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    x = tf.clip_by_value(x,0,tmp)
     x = y*x
     return x
 
@@ -92,7 +92,7 @@ def customGrad(op, x):
     x = tf.abs(x)
     x = tf.floor(x / (1/np.power(2,after2-2)))
     x = x * (1.0/np.power(2,after2-2))
-    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    x = tf.clip_by_value(x,0,tmp)
     x = x*y
     return x
 
@@ -111,7 +111,7 @@ def customGrad(op, x):
     x = tf.abs(x)
     x = tf.floor(x / (1/np.power(2,after2-2)))
     x = x * (1.0/np.power(2,after2-2))
-    x = tf.clip_by_value(x,1.0/np.power(2,after2-2),tmp)
+    x = tf.clip_by_value(x,0,tmp)
     x = x*y
     return x
 @layer_register(log_shape=True)
@@ -267,7 +267,7 @@ def Conv2D(
             inputs = tf.abs(inputs)
             inputs = tf.floor(inputs / min)
             inputs = inputs * (min)
-            inputs = tf.clip_by_value(inputs,min,tmp)
+            inputs = tf.clip_by_value(inputs,0,tmp)
             inputs = inputs*y
             #inputs = tf.Print(inputs,[inputs[0]])
 
@@ -311,7 +311,7 @@ def Conv2D(
                     outputs = tf.abs(outputs)
                     outputs = tf.floor(outputs / min)
                     outputs = outputs * min
-                    outputs = tf.clip_by_value(outputs,min,tmp)
+                    outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
 		
             else:
@@ -367,7 +367,7 @@ def Conv2D(
                     outputs = tf.abs(outputs)
                     outputs = tf.floor(outputs / min)
                     outputs = outputs * min
-                    outputs = tf.clip_by_value(outputs,min,tmp)
+                    outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
             count+=1
 
