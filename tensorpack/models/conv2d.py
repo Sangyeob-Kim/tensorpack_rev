@@ -262,7 +262,7 @@ def Conv2D(
                        	"RealDiv" : "Jump",      
                         "Mul": "Jump"}):
             #inputs = tf.Print(inputs,[inputs[0]])
-            tf.summary.histogram(inputs.name, inputs)
+            #tf.summary.histogram(inputs.name, inputs)
             y = tf.sign(inputs)
             inputs = tf.abs(inputs)
             inputs = tf.floor(inputs / min)
