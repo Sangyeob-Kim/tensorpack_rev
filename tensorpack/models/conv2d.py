@@ -267,7 +267,7 @@ def Conv2D(
             inputs = tf.abs(inputs)
             inputs = tf.floor(inputs / min)
             inputs = inputs * (min)
-            inputs = tf.clip_by_value(inputs,min,tmp)
+            inputs = tf.clip_by_value(inputs,0,tmp)
             inputs = inputs*y
             #inputs = tf.Print(inputs,[inputs[0]])
 
