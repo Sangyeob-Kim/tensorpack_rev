@@ -311,7 +311,7 @@ def Conv2D(
                     outputs = tf.abs(outputs)
                     outputs = tf.floor(outputs / min)
                     outputs = outputs * min
-                    outputs = tf.clip_by_value(outputs,min,tmp)
+                    outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
 		
             else:
@@ -341,7 +341,7 @@ def Conv2D(
                     outputs2 = tf.abs(outputs2)
                     outputs2 = tf.floor(outputs2 / min)
                     outputs2 = outputs2 * min
-                    outputs2 = tf.clip_by_value(outputs2,min,tmp)
+                    outputs2 = tf.clip_by_value(outputs2,0,tmp)
                     outputs2 = outputs2*y
                 #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
                 #    outputs = tf.identity(outputs)
@@ -367,7 +367,7 @@ def Conv2D(
                     outputs = tf.abs(outputs)
                     outputs = tf.floor(outputs / min)
                     outputs = outputs * min
-                    outputs = tf.clip_by_value(outputs,min,tmp)
+                    outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
             count+=1
 
