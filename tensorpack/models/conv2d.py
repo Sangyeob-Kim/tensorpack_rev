@@ -140,7 +140,9 @@ def Conv2D(
         split=1,
         after = 32,
         f_part = 30,
-	g_after = 32
+	g_after = 32,
+	activate_after = 0,
+	activate_f_part = 0
         ):
 	
     """
@@ -370,7 +372,40 @@ def Conv2D(
                     outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
             count+=1
+	
+        activate_before = 32
+        activate_tmp = 0.0 
+     
+        for i in range(activate_after-1):
+            if(i-activate_f_part<0):
+                activate_tmp+= 1.0/np.power(2,-i+activate_f_part)
+            else:
+                activate_tmp+= np.power(2,i-activate_f_part)
 
+        activate_min = 1.0/np.power(2,activate_f_part)
+	
+	with G.gradient_override_map({"Round": "Identity",
+                                "Minimum" : "Jump",
+                                "Maximum" : "Jump",
+                                "LessEqual" : "Jump",
+                                "GreaterEqual" : "Jump",
+                                "Select" : "Identity",
+                                "Reshape" : "Identity",
+                                "Sub": "Jump",
+                                "Div": "Jump",
+                                "Add": "Jump",
+                                "Sign" : "Identity",
+                                "Abs" : "Identity",
+                                "Floor" : "Identity",
+                                "Div" : "Jump",
+                       	        "RealDiv" : "Jump",
+                                "Mul": "Jump"}):
+                    y = tf.sign(outputs)
+                    outputs = tf.abs(outputs)
+                    outputs = tf.floor(outputs / activate_min)
+                    outputs = outputs * activate_min
+                    outputs = tf.clip_by_value(outputs,0,activate_tmp)
+                    outputs = outputs*y
         conv = outputs
         if activation is None:
             activation = tf.identity
