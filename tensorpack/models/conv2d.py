@@ -196,7 +196,7 @@ def Conv2D(
         assert dilation_rate == (1, 1) or get_tf_version_number() >= 1.5, 'TF>=1.5 required for group dilated conv'
 
         kernel_shape = shape2d(kernel_size)
-        filter_shape = kernel_shape + [in_channel, out_channel]
+        filter_shape = [1,1] + [in_channel, out_channel]
         stride = shape4d(strides, data_format=data_format)
 
         kwargs = dict(data_format=data_format)
@@ -233,9 +233,25 @@ def Conv2D(
         min = 1.0/np.power(2,f_part)
         print(tmp)
         print(min)
-        W = tf.get_variable(
-            'W', filter_shape, initializer=kernel_initializer)
-
+        W1 = tf.get_variable(
+            'W1', filter_shape, initializer=kernel_initializer)
+        W2 = tf.get_variable(
+            'W2', filter_shape, initializer=kernel_initializer)
+        W3 = tf.get_variable(
+            'W3', filter_shape, initializer=kernel_initializer)
+        W4 = tf.get_variable(
+            'W4', filter_shape, initializer=kernel_initializer)
+        W5 = tf.get_variable(
+            'W5', filter_shape, initializer=kernel_initializer)
+        W6 = tf.get_variable(
+            'W6', filter_shape, initializer=kernel_initializer)
+        W7 = tf.get_variable(
+            'W7', filter_shape, initializer=kernel_initializer)
+        W8 = tf.get_variable(
+            'W8', filter_shape, initializer=kernel_initializer)
+        W9 = tf.get_variable(
+            'W9', filter_shape, initializer=kernel_initializer)	
+	
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
             #b = tf.round((b - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
@@ -280,9 +296,42 @@ def Conv2D(
         #   W = tf.clip_by_value(W,min_range,max_range)
 		
         inputs = tf.split(inputs, in_channel, channel_axis)
-        kernels = W
-        kernels = tf.transpose(kernels, perm=[0,1,3,2])
-        kernels = tf.split(kernels, in_channel, 3)
+	
+        kernels1 = W1
+        kernels1 = tf.transpose(kernels1, perm=[0,1,3,2])
+        kernels1 = tf.split(kernels1, in_channel, 3)
+
+        kernels2 = W2
+        kernels2 = tf.transpose(kernels2, perm=[0,1,3,2])
+        kernels2 = tf.split(kernels2, in_channel, 3)
+
+        kernels3 = W3
+        kernels3 = tf.transpose(kernels3, perm=[0,1,3,2])
+        kernels3 = tf.split(kernels3, in_channel, 3)
+	
+        kernels4 = W4
+        kernels4 = tf.transpose(kernels4, perm=[0,1,3,2])
+        kernels4 = tf.split(kernels4, in_channel, 3)
+	
+        kernels5 = W5
+        kernels5 = tf.transpose(kernels5, perm=[0,1,3,2])
+        kernels5 = tf.split(kernels5, in_channel, 3)
+	
+        kernels6 = W6
+        kernels6 = tf.transpose(kernels6, perm=[0,1,3,2])
+        kernels6 = tf.split(kernels6, in_channel, 3)
+	
+        kernels7 = W7
+        kernels7 = tf.transpose(kernels7, perm=[0,1,3,2])
+        kernels7 = tf.split(kernels7, in_channel, 3)
+	
+        kernels8 = W8
+        kernels8 = tf.transpose(kernels8, perm=[0,1,3,2])
+        kernels8 = tf.split(kernels8, in_channel, 3)
+	
+        kernels9 = W9
+        kernels9 = tf.transpose(kernels9, perm=[0,1,3,2])
+        kernels9 = tf.split(kernels9, in_channel, 3)
         count = 0	
 	
         for i, k in zip(inputs, kernels):
