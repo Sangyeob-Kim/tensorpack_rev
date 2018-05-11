@@ -335,7 +335,7 @@ def Conv2D(
         count = 0	
 	
         shape = tf.shape(inputs)
-        for i, k in zip(inputs[:, 0:shape[1]-1, 0:shape[2]+1, :], kernels1):
+        for i, k in zip(inputs[:, 0:(shape[1]-1), 0:(shape[2]+1), :], kernels1):
             if(count==0):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
