@@ -301,7 +301,14 @@ def Conv2D(
         c = shape[3]
 	
         inputs1 = tf.split(inputs[:,0:w-1,0:h-1,:], in_channel, channel_axis)
-        inputs = tf.split(inputs, in_channel, channel_axis)
+        inputs2 = tf.split(inputs[:,0:w-1,1:h,:], in_channel, channel_axis)
+        inputs3 = tf.split(inputs[:,0:w-1,2:h+1,:], in_channel, channel_axis)
+        inputs4 = tf.split(inputs[:,1:w,0:h-1,:], in_channel, channel_axis)
+        inputs5 = tf.split(inputs[:,1:w,1:h,:], in_channel, channel_axis)
+        inputs6 = tf.split(inputs[:,1:w,2:h+1,:], in_channel, channel_axis)
+        inputs7 = tf.split(inputs[:,2:w+1,0:h-1,:], in_channel, channel_axis)
+        inputs8 = tf.split(inputs[:,2:w+1,1:h,:], in_channel, channel_axis)
+        inputs9 = tf.split(inputs[:,2:w+1,1:h+1,:], in_channel, channel_axis)
 	
         kernels1 = W1
         kernels1 = tf.transpose(kernels1, perm=[0,1,3,2])
@@ -431,7 +438,7 @@ def Conv2D(
                     outputs = outputs*y
             count+=1
 	
-        for i, k in zip(inputs[1:shape[0], 0:shape[1]-1, 0:shape[2]+1, 0:shape[3]+1], kernels2):
+        for i, k in zip(inputs2, kernels2):
 		
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
@@ -488,7 +495,7 @@ def Conv2D(
                     outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y	
 			
-        for i, k in zip(inputs[2:shape[0]+1, 0:shape[1]-1, 0:shape[2]+1, 0:shape[3]+1], kernels3):
+        for i, k in zip(inputs3, kernels3):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
                     k = tf.identity(k)
@@ -544,7 +551,7 @@ def Conv2D(
                     outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
 			
-        for i, k in zip(inputs[0:shape[0]-1, 1:shape[1], 0:shape[2]+1, 0:shape[3]+1], kernels4):
+        for i, k in zip(inputs4, kernels4):
 
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
@@ -601,7 +608,7 @@ def Conv2D(
                     outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
 			
-        for i, k in zip(inputs[1:shape[0], 1:shape[1], 0:shape[2]+1, 0:shape[3]+1], kernels5):
+        for i, k in zip(inputs5, kernels5):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
                     k = tf.identity(k)
@@ -657,7 +664,7 @@ def Conv2D(
                     outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
 			
-        for i, k in zip(inputs[2:shape[0]+1, 1:shape[1], 0:shape[2]+1, 0:shape[3]+1], kernels6):
+        for i, k in zip(inputs6, kernels6):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
                     k = tf.identity(k)
@@ -713,63 +720,7 @@ def Conv2D(
                     outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
 
-        for i, k in zip(inputs[0:shape[0]-1, 2:shape[1]+1, 0:shape[2]+1, 0:shape[3]+1], kernels7):
-                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
-                    i = tf.identity(i)
-                    k = tf.identity(k)
-		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-
-                with G.gradient_override_map({"Round": "Identity",
-                                "Minimum" : "Jump",
-                                "Maximum" : "Jump",
-                                "LessEqual" : "Jump",
-                                "GreaterEqual" : "Jump",
-                                "Select" : "Identity",
-                                "Reshape" : "Identity",
-                                "Sub": "Jump",
-                                "Div": "Jump",
-                                "Add": "Jump",
-                                "Sign" : "Identity",
-                                "Abs" : "Identity",
-                                "Floor" : "Identity",
-                                "Div" : "Jump",
-                       	        "RealDiv" : "Jump",
-                                "Mul": "Jump"}):
-                    y = tf.sign(outputs2)
-                    outputs2 = tf.abs(outputs2)
-                    outputs2 = tf.floor(outputs2 / min)
-                    outputs2 = outputs2 * min
-                    outputs2 = tf.clip_by_value(outputs2,0,tmp)
-                    outputs2 = outputs2*y
-                #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
-                #    outputs = tf.identity(outputs)
-		
-                outputs = tf.add(outputs, outputs2)
-                with G.gradient_override_map({"Round": "Identity",
-                                "Minimum" : "Jump",
-                                "Maximum" : "Jump",
-                                "LessEqual" : "Jump",
-                                "GreaterEqual" : "Jump",
-                                "Select" : "Identity",
-                                "Reshape" : "Identity",
-                                "Sub": "Jump",
-                                "Div": "Jump",
-                                "Add": "Jump",
-                                "Sign" : "Identity",
-                                "Abs" : "Identity",
-                                "Floor" : "Identity",
-                                "Div" : "Jump",
-                       	        "RealDiv" : "Jump",
-                                "Mul": "Jump"}):
-                    y = tf.sign(outputs)
-                    outputs = tf.abs(outputs)
-                    outputs = tf.floor(outputs / min)
-                    outputs = outputs * min
-                    outputs = tf.clip_by_value(outputs,0,tmp)
-                    outputs = outputs*y
-			
-        for i, k in zip(inputs[1:shape[0], 2:shape[1]+1, 0:shape[2]+1, 0:shape[3]+1], kernels8):
+        for i, k in zip(inputs7, kernels7):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
                     k = tf.identity(k)
@@ -825,7 +776,63 @@ def Conv2D(
                     outputs = tf.clip_by_value(outputs,0,tmp)
                     outputs = outputs*y
 			
-        for i, k in zip(inputs[2:shape[0]+1, 2:shape[1]+1, 0:shape[2]+1, 0:shape[3]+1], kernels9):
+        for i, k in zip(inputs8, kernels8):
+                with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
+                    i = tf.identity(i)
+                    k = tf.identity(k)
+		
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
+
+                with G.gradient_override_map({"Round": "Identity",
+                                "Minimum" : "Jump",
+                                "Maximum" : "Jump",
+                                "LessEqual" : "Jump",
+                                "GreaterEqual" : "Jump",
+                                "Select" : "Identity",
+                                "Reshape" : "Identity",
+                                "Sub": "Jump",
+                                "Div": "Jump",
+                                "Add": "Jump",
+                                "Sign" : "Identity",
+                                "Abs" : "Identity",
+                                "Floor" : "Identity",
+                                "Div" : "Jump",
+                       	        "RealDiv" : "Jump",
+                                "Mul": "Jump"}):
+                    y = tf.sign(outputs2)
+                    outputs2 = tf.abs(outputs2)
+                    outputs2 = tf.floor(outputs2 / min)
+                    outputs2 = outputs2 * min
+                    outputs2 = tf.clip_by_value(outputs2,0,tmp)
+                    outputs2 = outputs2*y
+                #with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
+                #    outputs = tf.identity(outputs)
+		
+                outputs = tf.add(outputs, outputs2)
+                with G.gradient_override_map({"Round": "Identity",
+                                "Minimum" : "Jump",
+                                "Maximum" : "Jump",
+                                "LessEqual" : "Jump",
+                                "GreaterEqual" : "Jump",
+                                "Select" : "Identity",
+                                "Reshape" : "Identity",
+                                "Sub": "Jump",
+                                "Div": "Jump",
+                                "Add": "Jump",
+                                "Sign" : "Identity",
+                                "Abs" : "Identity",
+                                "Floor" : "Identity",
+                                "Div" : "Jump",
+                       	        "RealDiv" : "Jump",
+                                "Mul": "Jump"}):
+                    y = tf.sign(outputs)
+                    outputs = tf.abs(outputs)
+                    outputs = tf.floor(outputs / min)
+                    outputs = outputs * min
+                    outputs = tf.clip_by_value(outputs,0,tmp)
+                    outputs = outputs*y
+			
+        for i, k in zip(inputs9, kernels9):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
                     k = tf.identity(k)
