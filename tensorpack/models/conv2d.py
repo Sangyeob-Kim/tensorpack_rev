@@ -236,15 +236,15 @@ def Conv2D(
         print(min)
         W = tf.get_variable(
             'W', filter_shape2, initializer=kernel_initializer)
-        W1 = W[0,0,:,:]
-        W2 = W[1,0,:,:]
-        W3 = W[2,0,:,:]
-        W4 = W[0,1,:,:]
-        W5 = W[1,1,:,:]
-        W6 = W[2,1,:,:]
-        W7 = W[0,2,:,:]
-        W8 = W[1,2,:,:]
-        W9 = W[2,2,:,:]
+        W1 = W[0:1,0:1,:,:]
+        W2 = W[1:2,0:1,:,:]
+        W3 = W[2:3,0:1,:,:]
+        W4 = W[0:1,1:2,:,:]
+        W5 = W[1:2,1:2,:,:]
+        W6 = W[2:3,1:2,:,:]
+        W7 = W[0:1,2:3,:,:]
+        W8 = W[1:2,2:3,:,:]
+        W9 = W[2:3,2:3,:,:]
 #         W1 = tf.get_variable(
 #             'W1', filter_shape, initializer=kernel_initializer)
 #         W2 = tf.get_variable(
