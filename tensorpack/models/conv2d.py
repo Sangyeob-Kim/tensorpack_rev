@@ -294,7 +294,7 @@ def Conv2D(
         #   W = (W+range_T_add_1_div_2)
         #   W = min_range+(W*range_div_range_T)
         #   W = tf.clip_by_value(W,min_range,max_range)
-		
+        shape = inputs.shape		
         inputs = tf.split(inputs, in_channel, channel_axis)
 	
         kernels1 = W1
@@ -333,9 +333,9 @@ def Conv2D(
         kernels9 = tf.transpose(kernels9, perm=[0,1,3,2])
         kernels9 = tf.split(kernels9, in_channel, 3)
         count = 0	
-        print(inputs)
+
         #shape = tf.shape(inputs)
-        shape = inputs.shape
+
         print(inputs.shape,inputs.shape[0],inputs.shape[1],inputs.shape[2],inputs.shape[3])
         for i, k in zip(inputs[:, 0:shape[1]-1, 0:shape[2]+1, :], kernels1):
             if(count==0):
