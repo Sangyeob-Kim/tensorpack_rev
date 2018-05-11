@@ -294,7 +294,12 @@ def Conv2D(
         #   W = (W+range_T_add_1_div_2)
         #   W = min_range+(W*range_div_range_T)
         #   W = tf.clip_by_value(W,min_range,max_range)
-        shape = inputs.shape		
+        shape = inputs.shape
+        b = shape[0]
+        w = shape[1]
+        h = shape[2]
+        c = shape[3]
+	
         inputs = tf.split(inputs, in_channel, channel_axis)
 	
         kernels1 = W1
@@ -336,8 +341,8 @@ def Conv2D(
 
         #shape = tf.shape(inputs)
 
-        print(shape,shape[0],shape[1],shape[2],shape[3])
-        for i, k in zip(inputs[:, 0:shape[1]-1, 0:shape[2]+1, :], kernels1):
+        #print(shape,shape[0],shape[1],shape[2],shape[3])
+        for i, k in zip(inputs[:, 0:w-1, 0:h+1, :], kernels1):
             if(count==0):
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
