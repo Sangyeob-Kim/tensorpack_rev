@@ -308,7 +308,7 @@ def Conv2D(
         inputs6 = tf.split(inputs[:,1:w,2:h+1,:], in_channel, channel_axis)
         inputs7 = tf.split(inputs[:,2:w+1,0:h-1,:], in_channel, channel_axis)
         inputs8 = tf.split(inputs[:,2:w+1,1:h,:], in_channel, channel_axis)
-        inputs9 = tf.split(inputs[:,2:w+1,1:h+1,:], in_channel, channel_axis)
+        inputs9 = tf.split(inputs[:,2:w+1,2:h+1,:], in_channel, channel_axis)
 	
         kernels1 = W1
         kernels1 = tf.transpose(kernels1, perm=[0,1,3,2])
