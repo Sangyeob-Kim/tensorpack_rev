@@ -334,7 +334,8 @@ def Conv2D(
         kernels9 = tf.split(kernels9, in_channel, 3)
         count = 0	
 	
-        shape = tf.shape(inputs)
+        #shape = tf.shape(inputs)
+        shape = inputs.get_shape().as_list()
         print(shape,shape[0],shape[1],shape[2],shape[3])
         for i, k in zip(inputs[:, 0:shape[1]-1, 0:shape[2]+1, :], kernels1):
             if(count==0):
