@@ -361,7 +361,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Jump",
                                 "Minimum" : "Jump",
@@ -391,7 +391,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -449,7 +449,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -505,7 +505,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -562,7 +562,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -618,7 +618,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -674,7 +674,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -730,7 +730,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -786,7 +786,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride,"valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
@@ -842,7 +842,7 @@ def Conv2D(
                     i = tf.identity(i)
                     k = tf.identity(k)
 		
-                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding=valid, **kwargs)
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "valid", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
