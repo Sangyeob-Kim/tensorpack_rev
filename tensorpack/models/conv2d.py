@@ -333,7 +333,7 @@ def Conv2D(
         kernels9 = tf.transpose(kernels9, perm=[0,1,3,2])
         kernels9 = tf.split(kernels9, in_channel, 3)
         count = 0	
-	
+        print(inputs)
         #shape = tf.shape(inputs)
         shape = inputs.shape
         print(inputs.shape,inputs.shape[0],inputs.shape[1],inputs.shape[2],inputs.shape[3])
