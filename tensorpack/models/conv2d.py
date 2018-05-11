@@ -197,6 +197,7 @@ def Conv2D(
 
         kernel_shape = shape2d(kernel_size)
         filter_shape = [1,1] + [in_channel, out_channel]
+        filter_shape2 = kernel_shape + [in_channel, out_channel]
         stride = shape4d(strides, data_format=data_format)
 
         kwargs = dict(data_format=data_format)
@@ -233,24 +234,35 @@ def Conv2D(
         min = 1.0/np.power(2,f_part)
         print(tmp)
         print(min)
-        W1 = tf.get_variable(
-            'W1', filter_shape, initializer=kernel_initializer)
-        W2 = tf.get_variable(
-            'W2', filter_shape, initializer=kernel_initializer)
-        W3 = tf.get_variable(
-            'W3', filter_shape, initializer=kernel_initializer)
-        W4 = tf.get_variable(
-            'W4', filter_shape, initializer=kernel_initializer)
-        W5 = tf.get_variable(
-            'W5', filter_shape, initializer=kernel_initializer)
-        W6 = tf.get_variable(
-            'W6', filter_shape, initializer=kernel_initializer)
-        W7 = tf.get_variable(
-            'W7', filter_shape, initializer=kernel_initializer)
-        W8 = tf.get_variable(
-            'W8', filter_shape, initializer=kernel_initializer)
-        W9 = tf.get_variable(
-            'W9', filter_shape, initializer=kernel_initializer)	
+        W = tf.get_variable(
+            'W', filter_shape2, initializer=kernel_initializer)
+        W1 = W[0,0,:,:]
+        W2 = W[1,0,:,:]
+        W3 = W[2,0,:,:]
+        W4 = W[0,1,:,:]
+        W5 = W[1,1,:,:]
+        W6 = W[2,1,:,:]
+        W7 = W[0,2,:,:]
+        W8 = W[1,2,:,:]
+        W9 = W[2,2,:,:]
+#         W1 = tf.get_variable(
+#             'W1', filter_shape, initializer=kernel_initializer)
+#         W2 = tf.get_variable(
+#             'W2', filter_shape, initializer=kernel_initializer)
+#         W3 = tf.get_variable(
+#             'W3', filter_shape, initializer=kernel_initializer)
+#         W4 = tf.get_variable(
+#             'W4', filter_shape, initializer=kernel_initializer)
+#         W5 = tf.get_variable(
+#             'W5', filter_shape, initializer=kernel_initializer)
+#         W6 = tf.get_variable(
+#             'W6', filter_shape, initializer=kernel_initializer)
+#         W7 = tf.get_variable(
+#             'W7', filter_shape, initializer=kernel_initializer)
+#         W8 = tf.get_variable(
+#             'W8', filter_shape, initializer=kernel_initializer)
+#         W9 = tf.get_variable(
+#             'W9', filter_shape, initializer=kernel_initializer)	
 	
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
