@@ -83,10 +83,10 @@ def Conv2D(
         G = tf.get_default_graph()
         kernel_shape = shape2d(kernel_size)
         in_channel = in_shape[channel_axis]
-	out_channel = filters
+        out_channel = filters
         filter_shape = kernel_shape + [in_channel, out_channel]
         stride = shape4d(strides, data_format=data_format)	
-	output = tf.nn.conv2d(inputs, kernels,stride,padding.upper(),**kwargs)
+        output = tf.nn.conv2d(inputs, kernels,stride,padding.upper(),**kwargs)
 	
 #         # group conv implementation
 #         data_format = get_data_format(data_format, tfmode=False)
