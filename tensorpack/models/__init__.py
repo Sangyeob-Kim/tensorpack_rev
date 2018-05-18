@@ -8,6 +8,7 @@ if STATICA_HACK:
     from .batch_norm import *
     from .common import *
     from .conv2d import *
+    from .conv2d_dummy import *
     from .fc import *
     from .image_sample import *
     from .layer_norm import *
