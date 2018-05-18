@@ -400,7 +400,7 @@ def Conv2D(
 
 
         #shape = tf.shape(inputs)
-        with G.gradient_override_map({"Conv2D" : "Conv2D)with_padding"}):
+        with G.gradient_override_map({"Conv2D" : "Conv2D_with_padding"}):
           outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
 	
 #         #print(shape,shape[0],shape[1],shape[2],shape[3])
