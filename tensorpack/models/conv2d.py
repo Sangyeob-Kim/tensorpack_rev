@@ -114,6 +114,127 @@ def customGrad(op, x):
     x = tf.clip_by_value(x,0,tmp)
     x = x*y
     return x
+
+#For no padding conv2d
+@ops.RegisterGradient("Conv2D_no_padding")
+def Conv2D_no_padding(op, grad):
+	dilations = op.get_attr("dilations")
+	strides = op.get_attr("strides")
+	padding = op.get_attr("padding")
+	use_cudnn_on_gpu = op.get_attr("use_cudnn_on_gpu")
+	data_format = op.get_attr("data_format")
+	shape_0, shape_1 = array_ops.shape_n([op.inputs[0], op.inputs[1]])
+
+	shape0 = op.inputs[0].get_shape().as_list()
+
+	inputs = op.inputs[0]
+
+	for i in range(shape0[0]):
+		temp_input = [inputs[i,:,:,:]]
+		temp_input = tf.transpose(temp_input, perm=[3,1,2,0])	
+		temp_grad = tf.transpose([grad[i,:,:,:]],perm=[1,2,0,3])
+		
+		temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
+		
+		if(i==0):
+			shape1 = temp_out.get_shape().as_list()
+			grad_w = tf.zeros(shape1,tf.float32)
+
+		grad_w = grad_w + temp_out
+
+	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
+
+
+	kernel = op.inputs[1]	
+	kernel_T = tf.zeros(shape1,tf.float32)
+
+	 
+	kernel_T = tf.transpose(kernel,perm=[3,0,1,2]) 
+	kernel_T = tf.image.rot90(kernel_T,k=2)
+	kernel_T = tf.transpose(kernel_T,perm=[1,2,0,3])
+	pad_size = shape1[1]-1
+	pad = tf.constant([[0,0],[pad_size,pad_size],[pad_size,pad_size],[0,0]])
+	grad_rev = tf.pad(grad, pad, "constant")
+
+	grad_x = tf.nn.conv2d(grad_rev,kernel_T,strides,"VALID")
+
+	return[
+		grad_x,
+		grad_w
+	]
+
+#For padding conv2d
+@ops.RegisterGradient("Conv2D_with_padding")
+def Conv2D_with_padding(op, grad):
+	dilations = op.get_attr("dilations")
+	strides = op.get_attr("strides")
+	padding = op.get_attr("padding")
+	use_cudnn_on_gpu = op.get_attr("use_cudnn_on_gpu")
+	data_format = op.get_attr("data_format")
+	shape_0, shape_1 = array_ops.shape_n([op.inputs[0], op.inputs[1]])
+
+	shape0 = op.inputs[0].get_shape().as_list()
+	shape2 = grad.get_shape().as_list()
+
+	inputs = tf.pad(op.inputs[0], tf.constant([[0,0],[1,1],[1,1],[0,0]]),"constant")
+
+	for i in range(shape0[0]):
+		temp_input = [inputs[i,:,:,:]]
+		temp_input = tf.transpose(temp_input, perm=[3,1,2,0])	
+		temp_grad = tf.transpose([grad[i,:,:,:]],perm=[1,2,0,3])
+			
+		temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
+		
+		if(i==0):
+			shape3 = temp_input.get_shape().as_list()
+			shape1 = temp_out.get_shape().as_list()
+			grad_w = tf.zeros(shape1,tf.float32)
+
+		grad_w = grad_w + temp_out
+
+	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
+
+
+	kernel = op.inputs[1]	
+#	kernel_T = tf.zeros(shape1,tf.float32)
+	
+	kernel_T = tf.transpose(kernel,perm=[3,0,1,2]) 
+	kernel_T = tf.image.rot90(kernel_T,k=2)
+	kernel_T = tf.transpose(kernel_T,perm=[1,2,0,3])
+	pad_size = shape1[1]-2
+	pad = tf.constant([[0,0],[pad_size,pad_size],[pad_size,pad_size],[0,0]])
+	grad_rev = tf.pad(grad, pad, "constant")
+
+	grad_x = tf.nn.conv2d(grad_rev,kernel_T,strides,"VALID")
+#	grad_x = tf.zeros(shape0) + shape[1]
+	return[
+		grad_x,
+		grad_w
+#		nn_ops.conv2d_backprop_input(
+#		shape_0,
+#		op.inputs[1],
+#		grad,
+#		dilations=dilations,
+#		strides=strides,
+#		padding=padding,
+#		use_cudnn_on_gpu=use_cudnn_on_gpu,
+#		data_format=data_format
+#		),
+
+#		nn_ops.conv2d_backprop_filter(
+#		op.inputs[0],
+#		shape_1,
+#		grad,
+#		dilations=dilations,
+#		strides=strides,
+#		padding=padding,
+#		use_cudnn_on_gpu=use_cudnn_on_gpu,
+#		data_format=data_format
+#		)
+
+	]
+
+
 @layer_register(log_shape=True)
 @convert_to_tflayer_args(
     args_names=['filters', 'kernel_size'],
@@ -279,7 +400,8 @@ def Conv2D(
 
 
         #shape = tf.shape(inputs)
-        outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
+        with G.gradient_override_map({"Conv2D" : "Conv2D)with_padding"}):
+          outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
 	
 #         #print(shape,shape[0],shape[1],shape[2],shape[3])
 #         for i, k in zip(inputs1, kernels1):
