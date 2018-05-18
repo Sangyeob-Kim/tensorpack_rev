@@ -246,7 +246,7 @@ def Conv2D(
 #         W8 = W[1:2,2:3,:,:]
 #         W9 = W[2:3,2:3,:,:]
 	
-	kernels = W
+        kernels = W
 	
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
