@@ -43,8 +43,11 @@ def Conv2D(
         bias_regularizer=None,
         activity_regularizer=None,
         split=1,
-        quantization=1,
-        after = 32
+        after = 32,
+        f_part = 30,
+	g_after = 32,
+	activate_after = 0,
+	activate_f_part = 0
         ):
     """
     A wrapper around `tf.layers.Conv2D`.
