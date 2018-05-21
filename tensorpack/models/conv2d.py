@@ -236,7 +236,7 @@ def customGrad(op, x):
 #For no padding conv2d
 @ops.RegisterGradient("Conv2D_no_padding")
 def Conv2D_no_padding(op, grad):
-	dilations = op.get_attr("dilations")
+#	dilations = op.get_attr("dilations")
 	strides = op.get_attr("strides")
 	padding = op.get_attr("padding")
 	use_cudnn_on_gpu = op.get_attr("use_cudnn_on_gpu")
@@ -285,7 +285,7 @@ def Conv2D_no_padding(op, grad):
 #For padding conv2d
 @ops.RegisterGradient("Conv2D_with_padding")
 def Conv2D_with_padding(op, grad):
-	dilations = op.get_attr("dilations")
+#	dilations = op.get_attr("dilations")
 	strides = op.get_attr("strides")
 	padding = op.get_attr("padding")
 	use_cudnn_on_gpu = op.get_attr("use_cudnn_on_gpu")
