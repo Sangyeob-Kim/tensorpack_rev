@@ -481,10 +481,10 @@ def Conv2D(
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 
         #shape = tf.shape(inputs)
-        if (padding.upper()=="VALID"):
+        if(padding.upper()=="VALID"):
           with G.gradient_override_map({"Conv2D" : "Conv2D_rev2"}):
             outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
-        else (padding.upper()=="SAME"):
+        else(padding.upper()=="SAME"):
           with G.gradient_override_map({"Conv2D" : "Conv2D_rev"}):
             outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
 	
