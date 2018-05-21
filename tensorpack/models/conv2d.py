@@ -129,7 +129,7 @@ def Conv2D_with_padding(op, grad):
 	data_format = op.get_attr("data_format")
 	shape_0, shape_1 = array_ops.shape_n([op.inputs[0], op.inputs[1]])
 
- 	shape0 = op.inputs[0].get_shape().as_list()
+	shape0 = op.inputs[0].get_shape().as_list()
 # 	temp = (op.inputs[0]).shape[0]
 # 	shape2 = grad.get_shape().as_list()
 
