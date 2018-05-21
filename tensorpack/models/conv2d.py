@@ -129,13 +129,14 @@ def Conv2D_with_padding(op, grad):
 	data_format = op.get_attr("data_format")
 	shape_0, shape_1 = array_ops.shape_n([op.inputs[0], op.inputs[1]])
 
-# 	shape0 = op.inputs[0].get_shape().as_list()
+ 	shape0 = op.inputs[0].get_shape().as_list()
 # 	temp = (op.inputs[0]).shape[0]
 # 	shape2 = grad.get_shape().as_list()
 
 # 	inputs = tf.pad(op.inputs[0], tf.constant([[0,0],[1,1],[1,1],[0,0]]),"constant")
 
-# 	for i in range(temp):
+ 	for i in range(shape0):
+		a=0
 # 		temp_input = [inputs[i,:,:,:]]
 # 		temp_input = tf.transpose(temp_input, perm=[3,1,2,0])	
 # 		temp_grad = tf.transpose([grad[i,:,:,:]],perm=[1,2,0,3])
