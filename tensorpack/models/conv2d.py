@@ -412,7 +412,7 @@ def Conv2D(
 
         #shape = tf.shape(inputs)
         with G.gradient_override_map({"Conv2D" : "Conv2D_rev"}):
-          outputs = tf.nn.conv2d(inputs, kernels, stride, "SAME", **kwargs)
+          outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
 
         conv = outputs
         if activation is None:
