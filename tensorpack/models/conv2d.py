@@ -484,7 +484,7 @@ def Conv2D(
         if(padding.upper()=="VALID"):
           with G.gradient_override_map({"Conv2D" : "Conv2D_rev2"}):
             outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
-        else(padding.upper()=="SAME"):
+        else if(padding.upper()=="SAME"):
           with G.gradient_override_map({"Conv2D" : "Conv2D_rev"}):
             outputs = tf.nn.conv2d(inputs, kernels, stride, padding.upper(), **kwargs)
 	
