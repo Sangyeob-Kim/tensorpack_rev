@@ -325,8 +325,6 @@ def Conv2D_with_padding(op, grad):
 		use_cudnn_on_gpu=use_cudnn_on_gpu,
 		data_format=data_format
 		)
-		None,
-		None
 	]
 
 
