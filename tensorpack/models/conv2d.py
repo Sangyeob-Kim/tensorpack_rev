@@ -3,18 +3,18 @@
 # File: conv2d.py
 
 
-# import tensorflow as tf
-# from .common import layer_register, VariableHolder
-# from ..tfutils.common import get_tf_version_number
-# from ..utils.argtools import shape2d, shape4d, get_data_format
-# from .tflayer import rename_get_variable, convert_to_tflayer_args
-# import numpy as np
-# from tensorflow.python.framework import function
-# from tensorflow.python.framework import ops
-# from tensorflow.python.ops import array_ops
-# from tensorflow.python.ops import gen_nn_ops
-# from tensorflow.python.ops.gen_nn_ops import *
-# from tensorflow.python.ops import nn_ops
+import tensorflow as tf
+from .common import layer_register, VariableHolder
+from ..tfutils.common import get_tf_version_number
+from ..utils.argtools import shape2d, shape4d, get_data_format
+from .tflayer import rename_get_variable, convert_to_tflayer_args
+import numpy as np
+from tensorflow.python.framework import function
+from tensorflow.python.framework import ops
+from tensorflow.python.ops import array_ops
+from tensorflow.python.ops import gen_nn_ops
+from tensorflow.python.ops.gen_nn_ops import *
+from tensorflow.python.ops import nn_ops
 
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
 
@@ -223,27 +223,29 @@ def Conv2D_no_padding(op, grad):
 	return[
 		#grad_x,
 		#grad_w
-		nn_ops.conv2d_backprop_input(
-		shape_0,
-		op.inputs[1],
-		grad,
-		dilations=dilations,
-		strides=strides,
-		padding=padding,
-		use_cudnn_on_gpu=use_cudnn_on_gpu,
-		data_format=data_format
-		),
+# 		nn_ops.conv2d_backprop_input(
+# 		shape_0,
+# 		op.inputs[1],
+# 		grad,
+# 		dilations=dilations,
+# 		strides=strides,
+# 		padding=padding,
+# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
+# 		data_format=data_format
+# 		),
 
-		nn_ops.conv2d_backprop_filter(
-		op.inputs[0],
-		shape_1,
-		grad,
-		dilations=dilations,
-		strides=strides,
-		padding=padding,
-		use_cudnn_on_gpu=use_cudnn_on_gpu,
-		data_format=data_format
-		)
+# 		nn_ops.conv2d_backprop_filter(
+# 		op.inputs[0],
+# 		shape_1,
+# 		grad,
+# 		dilations=dilations,
+# 		strides=strides,
+# 		padding=padding,
+# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
+# 		data_format=data_format
+# 		)
+		None,
+		None
 	]
 
 
@@ -305,26 +307,28 @@ def Conv2D_with_padding(op, grad):
 		#grad_x,
 		#grad_w
 		nn_ops.conv2d_backprop_input(
-		shape_0,
-		op.inputs[1],
-		grad,
-		dilations=dilations,
-		strides=strides,
-		padding=padding,
-		use_cudnn_on_gpu=use_cudnn_on_gpu,
-		data_format=data_format
-		),
+# 		shape_0,
+# 		op.inputs[1],
+# 		grad,
+# 		dilations=dilations,
+# 		strides=strides,
+# 		padding=padding,
+# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
+# 		data_format=data_format
+# 		),
 
-		nn_ops.conv2d_backprop_filter(
-		op.inputs[0],
-		shape_1,
-		grad,
-		dilations=dilations,
-		strides=strides,
-		padding=padding,
-		use_cudnn_on_gpu=use_cudnn_on_gpu,
-		data_format=data_format
-		)
+# 		nn_ops.conv2d_backprop_filter(
+# 		op.inputs[0],
+# 		shape_1,
+# 		grad,
+# 		dilations=dilations,
+# 		strides=strides,
+# 		padding=padding,
+# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
+# 		data_format=data_format
+# 		)
+		None,
+		None
 	]
 
 
