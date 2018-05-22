@@ -306,7 +306,7 @@ def Conv2D_with_padding(op, grad):
 	return[
 		#grad_x,
 		#grad_w
-		nn_ops.conv2d_backprop_input(
+#		nn_ops.conv2d_backprop_input(
 # 		shape_0,
 # 		op.inputs[1],
 # 		grad,
