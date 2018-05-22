@@ -204,8 +204,8 @@ def Conv2D_no_padding(op, grad):
 	shape1 = temp_out.get_shape().as_list()
 	grad_w = tf.zeros(shape1,tf.float32)
 	
-# 	grad_w = grad_w + temp_out
-# 	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
+	grad_w = grad_w + temp_out
+	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
 
 # 	kernel = op.inputs[1]	
 # 	kernel_T = tf.zeros(shape1,tf.float32)
@@ -286,9 +286,9 @@ def Conv2D_with_padding(op, grad):
 	shape1 = temp_out.get_shape().as_list()
 	grad_w = tf.zeros(shape1,tf.float32)
 
-# 	grad_w = grad_w + temp_out
+	grad_w = grad_w + temp_out
 		
-# 	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
+	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
 
 # 	kernel = op.inputs[1]	
 	
