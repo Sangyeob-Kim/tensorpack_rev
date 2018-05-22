@@ -201,8 +201,8 @@ def Conv2D_no_padding(op, grad):
 	temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
 		
 	
-# 	shape1 = temp_out.get_shape().as_list()
-# 	grad_w = tf.zeros(shape1,tf.float32)
+ 	shape1 = temp_out.get_shape().as_list()
+ 	grad_w = tf.zeros(shape1,tf.float32)
 
 # 	grad_w = grad_w + temp_out
 # 	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
@@ -221,29 +221,30 @@ def Conv2D_no_padding(op, grad):
 # 	grad_x = tf.nn.conv2d(grad_rev,kernel_T,strides,"VALID")
 
 	return[
-		grad_x,
+		#grad_x,
 		#grad_w
-# 		nn_ops.conv2d_backprop_input(
-# 		shape_0,
-# 		op.inputs[1],
-# 		grad,
-# 		dilations=dilations,
-# 		strides=strides,
-# 		padding=padding,
-# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
-# 		data_format=data_format
-# 		),
-
-		nn_ops.conv2d_backprop_filter(
-		op.inputs[0],
-		shape_1,
+		nn_ops.conv2d_backprop_input(
+		shape_0,
+		op.inputs[1],
 		grad,
 		dilations=dilations,
 		strides=strides,
 		padding=padding,
 		use_cudnn_on_gpu=use_cudnn_on_gpu,
 		data_format=data_format
-		)
+		),
+
+# 		nn_ops.conv2d_backprop_filter(
+# 		op.inputs[0],
+# 		shape_1,
+# 		grad,
+# 		dilations=dilations,
+# 		strides=strides,
+# 		padding=padding,
+# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
+# 		data_format=data_format
+# 		)
+		grad_w
 	]
 
 
@@ -282,8 +283,8 @@ def Conv2D_with_padding(op, grad):
 		
 	temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
 # 	shape3 = temp_input.get_shape().as_list()
-# 	shape1 = temp_out.get_shape().as_list()
-# 	grad_w = tf.zeros(shape1,tf.float32)
+ 	shape1 = temp_out.get_shape().as_list()
+ 	grad_w = tf.zeros(shape1,tf.float32)
 
 # 	grad_w = grad_w + temp_out
 		
@@ -314,16 +315,17 @@ def Conv2D_with_padding(op, grad):
 		data_format=data_format
 		),
 
-		nn_ops.conv2d_backprop_filter(
-		op.inputs[0],
-		shape_1,
-		grad,
-		dilations=dilations,
-		strides=strides,
-		padding=padding,
-		use_cudnn_on_gpu=use_cudnn_on_gpu,
-		data_format=data_format
-		)
+# 		nn_ops.conv2d_backprop_filter(
+# 		op.inputs[0],
+# 		shape_1,
+# 		grad,
+# 		dilations=dilations,
+# 		strides=strides,
+# 		padding=padding,
+# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
+# 		data_format=data_format
+# 		)
+		grad_w
 	]
 
 
