@@ -212,7 +212,7 @@ def Conv2D_no_padding(op, grad):
 
 	 
 	kernel_T = tf.transpose(kernel,perm=[3,0,1,2]) 
-	kernel_T = tf.image.rot90(kernel_T,k=1)
+	kernel_T = tf.image.rot90(kernel_T,k=2)
 # 	kernel_T = tf.transpose(kernel_T,perm=[1,2,0,3])
 # 	pad_size = shape1[1]-1
 # 	pad = tf.constant([[0,0],[pad_size,pad_size],[pad_size,pad_size],[0,0]])
@@ -293,7 +293,14 @@ def Conv2D_with_padding(op, grad):
 	kernel = op.inputs[1]	
 	
 	kernel_T = tf.transpose(kernel,perm=[3,0,1,2]) 
-	kernel_T = tf.image.rot90(kernel_T,k=1)
+# 	kernel_T = tf.image.rot90(kernel_T,k=2)
+
+	rotation_matrix = tf.pack([tf.cos(theta),
+				-tf.sin(theta),  
+				tf.sin(theta),
+				tf.cos(theta)])
+	rotation_matrix = tf.reshape(rotation_matrix, (2,2))
+	kernel_T = tf.matmul(kernel_T, rotation_matrix)
 # 	kernel_T = tf.transpose(kernel_T,perm=[1,2,0,3])
 # 	pad_size = shape1[1]-2
 # 	pad = tf.constant([[0,0],[pad_size,pad_size],[pad_size,pad_size],[0,0]])
