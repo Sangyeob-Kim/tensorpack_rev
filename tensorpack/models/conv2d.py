@@ -221,18 +221,18 @@ def Conv2D_no_padding(op, grad):
 # 	grad_x = tf.nn.conv2d(grad_rev,kernel_T,strides,"VALID")
 
 	return[
-		#grad_x,
+		grad_x,
 		#grad_w
-		nn_ops.conv2d_backprop_input(
-		shape_0,
-		op.inputs[1],
-		grad,
-		dilations=dilations,
-		strides=strides,
-		padding=padding,
-		use_cudnn_on_gpu=use_cudnn_on_gpu,
-		data_format=data_format
-		),
+# 		nn_ops.conv2d_backprop_input(
+# 		shape_0,
+# 		op.inputs[1],
+# 		grad,
+# 		dilations=dilations,
+# 		strides=strides,
+# 		padding=padding,
+# 		use_cudnn_on_gpu=use_cudnn_on_gpu,
+# 		data_format=data_format
+# 		),
 
 		nn_ops.conv2d_backprop_filter(
 		op.inputs[0],
