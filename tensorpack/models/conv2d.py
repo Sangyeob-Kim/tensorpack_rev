@@ -279,8 +279,8 @@ def Conv2D_with_padding(op, grad):
 	temp_input = inputs
 	temp_input = tf.transpose(temp_input, perm=[3,1,2,0])	
 	temp_grad = tf.transpose(grad,perm=[1,2,0,3])
-			
- 	temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
+		
+	temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
 # 	shape3 = temp_input.get_shape().as_list()
 # 	shape1 = temp_out.get_shape().as_list()
 # 	grad_w = tf.zeros(shape1,tf.float32)
