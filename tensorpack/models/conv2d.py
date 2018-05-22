@@ -311,7 +311,7 @@ def Conv2D(
           temp_input = tf.split(inputs[:,h_count:h-(kernel_size-2)+h_count,w_count:w-(kernel_size-2)+w_count,:], in_channel, channel_axis)
           temp_kernel = W[w_count:w_count+1,h_count:h_count+1,:,:]
 
-          for i, k in zip(temp_input, temp_kernel)
+          for i, k in zip(temp_input, temp_kernel):
             if((h_count==0)&(w_count==0)&(count==0)):
               with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                 i = tf.identity(i)
