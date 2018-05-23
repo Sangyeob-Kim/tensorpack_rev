@@ -432,13 +432,13 @@ def Conv2D(
         h = shape[2]
         c = shape[3]
         
-        inputs = tf.transpose(inputs, perm=[0,3,1,2])
+
         if(padding.upper()=="SAME"):
-          paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
+          paddings = tf.constant([[0,0],[1,1],[1,1],[0,0]])
           inputs = tf.pad(inputs,paddings,"constant")
           h = h+2
           w = w+2
-        inputs = tf.transpose(inputs, perm=[0,2,3,1])
+
 
         count = 0	
 
@@ -448,7 +448,7 @@ def Conv2D(
         sqrt_kernel_size=kernel_size * kernel_size
 
         for j in range(sqrt_kernel_size):
-          temp_input = tf.split(inputs[:,h_count:h-(kernel_size-2)+h_count,w_count:w-(kernel_size-2)+w_count,:], in_channel, channel_axis)
+          temp_input = tf.split(inputs[:,h_count:h-(kernel_size-3)+h_count,w_count:w-(kernel_size-3)+w_count,:], in_channel, channel_axis)
           temp_kernel = W[w_count:w_count+1,h_count:h_count+1,:,:]
           temp_kernel = tf.transpose(temp_kernel, perm=[0,1,3,2])
           temp_kernel = tf.split(temp_kernel, in_channel, 3)
