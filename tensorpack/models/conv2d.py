@@ -432,13 +432,14 @@ def Conv2D(
         h = shape[2]
         c = shape[3]
         
-        inputs = tf.transpose(inputs, perm=[0,3,1,2])
+#         inputs = tf.transpose(inputs, perm=[0,3,1,2])
         if(padding.upper()=="SAME"):
-          paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
+          paddings = tf.constant([[0,0],[1,1],[1,1],[0,0]])
           inputs = tf.pad(inputs,paddings,"constant")
           h = h+2
           w = w+2
-        inputs = tf.transpose(inputs, perm=[0,2,3,1])
+          print("\n input size: "h,w)
+#         inputs = tf.transpose(inputs, perm=[0,2,3,1])
 
         count = 0	
 
