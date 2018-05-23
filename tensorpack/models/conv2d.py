@@ -318,6 +318,7 @@ def Conv2D(
           inputs = tf.pad(inputs,paddings,"constant")
           h = h+2
           w = w+2
+          print("No Error!!!!")
         else:
           print("Error!!!!!!!")
 
