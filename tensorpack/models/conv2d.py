@@ -306,7 +306,7 @@ def Conv2D(
         #   W = (W+range_T_add_1_div_2)
         #   W = min_range+(W*range_div_range_T)
         #   W = tf.clip_by_value(W,min_range,max_range)
-        shape = inputs.shape
+        shape = inputs.get_shape().as_list()
         b = shape[0]
         w = shape[1]
         h = shape[2]
