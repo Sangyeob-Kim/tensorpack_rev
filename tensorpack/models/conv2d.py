@@ -313,29 +313,41 @@ def Conv2D(
         c = shape[3]
         
 
-#         if(padding.upper()=="SAME"):
-        inputs = tf.transpose(inputs, perm=[0,3,1,2])
-        paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
-        inputs = tf.pad(inputs,paddings,"constant")
-        inputs = tf.transpose(inputs, perm=[0,2,3,1])
-        h = h+2
-        w = w+2
+        if(padding.upper()=="SAME"):
+          inputs = tf.transpose(inputs, perm=[0,3,1,2])
+          paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
+          inputs = tf.pad(inputs,paddings,"constant")
+          inputs = tf.transpose(inputs, perm=[0,2,3,1])
+          h = h+2
+          w = w+2
 #           print("No Error!!!!")
 #         else:
 #           print("Error!!!!!!!")
 
 
 
-        inputs1 = tf.split(inputs[:,0:w-1,0:h-1,:], in_channel, channel_axis)
-        inputs2 = tf.split(inputs[:,0:w-1,1:h,:], in_channel, channel_axis)
-        inputs3 = tf.split(inputs[:,0:w-1,2:h+1,:], in_channel, channel_axis)
-        inputs4 = tf.split(inputs[:,1:w,0:h-1,:], in_channel, channel_axis)
-        inputs5 = tf.split(inputs[:,1:w,1:h,:], in_channel, channel_axis)
-        inputs6 = tf.split(inputs[:,1:w,2:h+1,:], in_channel, channel_axis)
-        inputs7 = tf.split(inputs[:,2:w+1,0:h-1,:], in_channel, channel_axis)
-        inputs8 = tf.split(inputs[:,2:w+1,1:h,:], in_channel, channel_axis)
-        inputs9 = tf.split(inputs[:,2:w+1,2:h+1,:], in_channel, channel_axis)
+#         inputs1 = tf.split(inputs[:,0:w-1,0:h-1,:], in_channel, channel_axis)
+#         inputs2 = tf.split(inputs[:,0:w-1,1:h,:], in_channel, channel_axis)
+#         inputs3 = tf.split(inputs[:,0:w-1,2:h+1,:], in_channel, channel_axis)
+#         inputs4 = tf.split(inputs[:,1:w,0:h-1,:], in_channel, channel_axis)
+#         inputs5 = tf.split(inputs[:,1:w,1:h,:], in_channel, channel_axis)
+#         inputs6 = tf.split(inputs[:,1:w,2:h+1,:], in_channel, channel_axis)
+#         inputs7 = tf.split(inputs[:,2:w+1,0:h-1,:], in_channel, channel_axis)
+#         inputs8 = tf.split(inputs[:,2:w+1,1:h,:], in_channel, channel_axis)
+#         inputs9 = tf.split(inputs[:,2:w+1,2:h+1,:], in_channel, channel_axis)
 
+
+
+        inputs1 = tf.split(inputs[:,0:w-2,0:h-2,:], in_channel, channel_axis)
+        inputs2 = tf.split(inputs[:,0:w-2,1:h-1,:], in_channel, channel_axis)
+        inputs3 = tf.split(inputs[:,0:w-2,2:h,:], in_channel, channel_axis)
+        inputs4 = tf.split(inputs[:,1:w-1,0:h-2,:], in_channel, channel_axis)
+        inputs5 = tf.split(inputs[:,1:w-1,1:h-1,:], in_channel, channel_axis)
+        inputs6 = tf.split(inputs[:,1:w-1,2:h,:], in_channel, channel_axis)
+        inputs7 = tf.split(inputs[:,2:w,0:h-2,:], in_channel, channel_axis)
+        inputs8 = tf.split(inputs[:,2:w,1:h-1,:], in_channel, channel_axis)
+        inputs9 = tf.split(inputs[:,2:w,2:h,:], in_channel, channel_axis)
+	
         shape_tmp = inputs1.get_shape().as_list()
         print("\nsize : " , shape_tmp)
         shape_tmp = inputs2.get_shape().as_list()
