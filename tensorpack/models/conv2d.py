@@ -273,7 +273,7 @@ def Conv2D_with_padding(op, grad):
 			if((h_count==0)&(w_count==0)&(count==0)):
 	
 				#with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):
-				outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
+				outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), strides, "VALID", **kwargs)
 
 				y = tf.sign(outputs)
 				outputs = tf.abs(outputs)
@@ -284,7 +284,7 @@ def Conv2D_with_padding(op, grad):
 	
 			else:
 
-				outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
+				outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), strides, "VALID", **kwargs)
 
 				
 				y = tf.sign(outputs2)
