@@ -438,7 +438,6 @@ def Conv2D(
           inputs = tf.pad(inputs,paddings,"constant")
           h = h+2
           w = w+2
-          print("\n input size: ", h,w)
 #         inputs = tf.transpose(inputs, perm=[0,2,3,1])
 
         count = 0	
