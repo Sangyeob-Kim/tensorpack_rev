@@ -275,34 +275,31 @@ def Conv2D_with_padding(op, grad):
 				#with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):
 				outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), strides, "VALID")
 
-				y = tf.sign(outputs)
-				outputs = tf.abs(outputs)
-				outputs = tf.floor(outputs / min)
-				outputs = outputs * min
-				outputs = tf.clip_by_value(outputs,0,tmp)
-				outputs = outputs*y
+# 				y = tf.sign(outputs)
+# 				outputs = tf.abs(outputs)
+# 				outputs = tf.floor(outputs / min)
+# 				outputs = outputs * min
+# 				outputs = tf.clip_by_value(outputs,0,tmp)
+# 				outputs = outputs*y
 	
 			else:
 
-				outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), strides, "VALID")
-
-				
-				y = tf.sign(outputs2)
-				outputs2 = tf.abs(outputs2)
-				outputs2 = tf.floor(outputs2 / min)
-				outputs2 = outputs2 * min
-				outputs2 = tf.clip_by_value(outputs2,0,tmp)
-				outputs2 = outputs2*y
-							#with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
-							#    outputs = tf.identity(outputs)
+				outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), strides, "VALID")				
+# 				y = tf.sign(outputs2)
+# 				outputs2 = tf.abs(outputs2)
+# 				outputs2 = tf.floor(outputs2 / min)
+# 				outputs2 = outputs2 * min
+# 				outputs2 = tf.clip_by_value(outputs2,0,tmp)
+# 				outputs2 = outputs2*y
+							
 				outputs = tf.add(outputs, outputs2)
 				
-				y = tf.sign(outputs)
-				outputs = tf.abs(outputs)
-				outputs = tf.floor(outputs / min)
-				outputs = outputs * min
-				outputs = tf.clip_by_value(outputs,0,tmp)
-				outputs = outputs*y
+# 				y = tf.sign(outputs)
+# 				outputs = tf.abs(outputs)
+# 				outputs = tf.floor(outputs / min)
+# 				outputs = outputs * min
+# 				outputs = tf.clip_by_value(outputs,0,tmp)
+# 				outputs = outputs*y
 				count+=1
 								
 		if(w_count==(kernel_size-1)):
