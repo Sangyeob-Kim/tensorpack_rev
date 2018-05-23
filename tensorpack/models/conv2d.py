@@ -265,7 +265,7 @@ def Conv2D_with_padding(op, grad):
 		tmp+= 1.0/np.power(2,i)
 	
 	for j in range(sqrt_kernel_size):
-		temp_input = tf.split(temp_inputs[:,h_count:h-(kernel_size-3)+h_count,w_count:w-(kernel_size-3)+w_count,:], shape0[0], 3)
+		temp_input = tf.split(temp_inputs[:,h_count:h-(kernel_size-1)+h_count,w_count:w-(kernel_size-1)+w_count,:], shape0[0], 3)
 		temp_kernel = temp_grad[w_count:w_count+1,h_count:h_count+1,:,:]
 		temp_kernel = tf.transpose(temp_kernel, perm=[0,1,3,2])
 		temp_kernel = tf.split(temp_kernel, shape2[0], 3)
