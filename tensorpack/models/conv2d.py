@@ -313,11 +313,14 @@ def Conv2D(
         c = shape[3]
         
         inputs = tf.transpose(inputs, perm=[0,3,1,2])
-#         if(padding.upper()=="SAME"):
-        paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
-        inputs = tf.pad(inputs,paddings,"constant")
-#           h = h+2
-#           w = w+2
+        if(padding.upper()=="SAME"):
+          paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
+          inputs = tf.pad(inputs,paddings,"constant")
+          h = h+2
+          w = w+2
+        else:
+          print("Error!!!!!!!")
+
         inputs = tf.transpose(inputs, perm=[0,2,3,1])
 
         inputs1 = tf.split(inputs[:,0:w-1,0:h-1,:], in_channel, channel_axis)
