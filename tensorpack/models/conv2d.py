@@ -458,8 +458,8 @@ def Conv2D(
                 i = tf.identity(i)
                 k = tf.identity(k)
 		
-              with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):
-                outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
+#               with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):
+              outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
 		
               with G.gradient_override_map({"Round": "Jump",
                                 "Minimum" : "Jump",
@@ -488,8 +488,8 @@ def Conv2D(
                 with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
                     i = tf.identity(i)
                     k = tf.identity(k)
-                with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):		
-                  outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
+#                 with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):		
+                outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
 
                 with G.gradient_override_map({"Round": "Identity",
                                 "Minimum" : "Jump",
