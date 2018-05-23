@@ -204,6 +204,7 @@ def Conv2D_no_padding(op, grad):
 #For padding conv2d
 @ops.RegisterGradient("Conv2D_with_padding")
 def Conv2D_with_padding(op, grad):
+	G = tf.get_default_graph()
 	dilations = op.get_attr("dilations")
 	strides = op.get_attr("strides")
 	padding = op.get_attr("padding")
