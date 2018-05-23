@@ -313,16 +313,16 @@ def Conv2D(
         c = shape[3]
         
 
-        if(padding.upper()=="SAME"):
-          inputs = tf.transpose(inputs, perm=[0,3,1,2])
-          paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
-          inputs = tf.pad(inputs,paddings,"constant")
-          inputs = tf.transpose(inputs, perm=[0,2,3,1])
-          h = h+2
-          w = w+2
-          print("No Error!!!!")
-        else:
-          print("Error!!!!!!!")
+#         if(padding.upper()=="SAME"):
+        inputs = tf.transpose(inputs, perm=[0,3,1,2])
+        paddings = tf.constant([[0,0],[0,0],[1,1],[1,1]])
+        inputs = tf.pad(inputs,paddings,"constant")
+        inputs = tf.transpose(inputs, perm=[0,2,3,1])
+        h = h+2
+        w = w+2
+#           print("No Error!!!!")
+#         else:
+#           print("Error!!!!!!!")
 
 
 
