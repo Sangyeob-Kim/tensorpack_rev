@@ -215,8 +215,8 @@ def Conv2D_with_padding(op, grad):
 	shape1 = op.inputs[1].get_shape().as_list()
 	shape2 = grad.get_shape().as_list()
 
-	h = shape0[0]
-	w = shape0[1]
+	h = shape0[1]
+	w = shape0[2]
 	
 	if(shape1[0]==5):
 		inputs = tf.pad(op.inputs[0], tf.constant([[0,0],[1,1],[1,1],[0,0]]),"constant")
