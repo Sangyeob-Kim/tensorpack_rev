@@ -241,8 +241,8 @@ def Conv2D_with_padding(op, grad):
 
 # 		grad_w = grad_w + temp_out
 
-	temp_input = inputs
-	temp_input = tf.transpose(temp_input, perm=[3,1,2,0])	
+	temp_inputs = inputs
+	temp_inputs = tf.transpose(temp_inputs, perm=[3,1,2,0])	
 	temp_grad = tf.transpose(grad,perm=[1,2,0,3])
 	
 	sqrt_kernel_size=shape2[1] * shape2[2]
@@ -254,10 +254,10 @@ def Conv2D_with_padding(op, grad):
 	w_count=0
 	
 	for j in range(sqrt_kernel_size):
-		temp_input = tf.split(inputs[:,h_count:h-(kernel_size-3)+h_count,w_count:w-(kernel_size-3)+w_count,:], in_channel, channel_axis)
+		temp_input = tf.split(temp_inputs[:,h_count:h-(kernel_size-3)+h_count,w_count:w-(kernel_size-3)+w_count,:], shape0[0], 3)
 		temp_kernel = temp_grad[w_count:w_count+1,h_count:h_count+1,:,:]
 		temp_kernel = tf.transpose(temp_kernel, perm=[0,1,3,2])
-		temp_kernel = tf.split(temp_kernel, in_channel, 3)
+		temp_kernel = tf.split(temp_kernel, shape2[0], 3)
 		for i, k in zip(temp_input, temp_kernel):
 			if((h_count==0)&(w_count==0)&(count==0)):
 				with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
