@@ -335,7 +335,26 @@ def Conv2D(
         inputs7 = tf.split(inputs[:,2:w+1,0:h-1,:], in_channel, channel_axis)
         inputs8 = tf.split(inputs[:,2:w+1,1:h,:], in_channel, channel_axis)
         inputs9 = tf.split(inputs[:,2:w+1,2:h+1,:], in_channel, channel_axis)
-	
+
+        shape_tmp = inputs1.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs2.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs3.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs4.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs5.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs6.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs7.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs8.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+        shape_tmp = inputs9.get_shape().as_list()
+        print("\nsize : " , shape_tmp)
+
         kernels1 = W1
         kernels1 = tf.transpose(kernels1, perm=[0,1,3,2])
         kernels1 = tf.split(kernels1, in_channel, 3)
