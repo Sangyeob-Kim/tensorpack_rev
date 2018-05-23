@@ -215,11 +215,18 @@ def Conv2D_with_padding(op, grad):
         shape1 = op.inputs[1].get_shape().as_list()
 	shape2 = grad.get_shape().as_list()
 
-        if(shape1[0]==5):
-	  inputs = tf.pad(op.inputs[0], tf.constant([[0,0],[1,1],[1,1],[0,0]]),"constant")
+	h = shape0[0]
+	w = shape0[1]
 	
+        if(shape1[0]==5):
+		inputs = tf.pad(op.inputs[0], tf.constant([[0,0],[1,1],[1,1],[0,0]]),"constant")
+		h=h+2
+		w=w+2
 	inputs = tf.pad(op.inputs[0], tf.constant([[0,0],[1,1],[1,1],[0,0]]),"constant")
-
+	h=h+2
+	w=w+2
+	
+	
 # 	for i in range(shape0[0]):
 # 		temp_input = [inputs[i,:,:,:]]
 # 		temp_input = tf.transpose(temp_input, perm=[3,1,2,0])	
@@ -237,14 +244,119 @@ def Conv2D_with_padding(op, grad):
 	temp_input = inputs
 	temp_input = tf.transpose(temp_input, perm=[3,1,2,0])	
 	temp_grad = tf.transpose(grad,perm=[1,2,0,3])
-		
-	temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
-# 	shape3 = temp_input.get_shape().as_list()
+	
+	sqrt_kernel_size=shape2[1] * shape2[2]
+	kernel_size = shape2[1]
+	
+	count = 0	
+
+	h_count=0
+	w_count=0
+	
+	for j in range(sqrt_kernel_size):
+		temp_input = tf.split(inputs[:,h_count:h-(kernel_size-3)+h_count,w_count:w-(kernel_size-3)+w_count,:], in_channel, channel_axis)
+		temp_kernel = temp_grad[w_count:w_count+1,h_count:h_count+1,:,:]
+		temp_kernel = tf.transpose(temp_kernel, perm=[0,1,3,2])
+		temp_kernel = tf.split(temp_kernel, in_channel, 3)
+		for i, k in zip(temp_input, temp_kernel):
+			if((h_count==0)&(w_count==0)&(count==0)):
+				with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
+					i = tf.identity(i)
+					k = tf.identity(k)
+	
+				with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):
+					outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
+					with G.gradient_override_map({"Round": "Jump",
+					      			"Minimum" : "Jump",
+					      			"Maximum" : "Jump",
+					      			"LessEqual" : "Jump",
+					      			"GreaterEqual" : "Jump",
+					      			"Select" : "Identity",
+					      			"Reshape" : "Identity",
+					      			"Sub": "Jump",
+					      			"Div": "Jump",
+					      			"Add": "Jump",
+					      			"Sign" : "Identity",
+					      			"Abs" : "Identity",
+					      			"Floor" : "Identity",
+					      			"Div" : "Jump",
+					      			"RealDiv" : "Jump",
+					      			"Mul": "Jump"}):
+						y = tf.sign(outputs)
+						outputs = tf.abs(outputs)
+						outputs = tf.floor(outputs / min)
+						outputs = outputs * min
+						outputs = tf.clip_by_value(outputs,0,tmp)
+						outputs = outputs*y
+	
+			else:
+				with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(g_after)+"bit"}):
+					i = tf.identity(i)
+					k = tf.identity(k)
+					with G.gradient_override_map({"Conv2D": "Conv2D_no_padding"}):		
+						outputs2 = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, "VALID", **kwargs)
+
+						with G.gradient_override_map({"Round": "Identity",
+							      		"Minimum" : "Jump",
+							      		"Maximum" : "Jump",
+							      		"LessEqual" : "Jump",
+							      		"GreaterEqual" : "Jump",
+							      		"Select" : "Identity",
+							      		"Reshape" : "Identity",
+							      		"Sub": "Jump",
+							      		"Div": "Jump",
+							      		"Add": "Jump",
+							      		"Sign" : "Identity",
+							      		"Abs" : "Identity",
+							      		"Floor" : "Identity",
+							      		"Div" : "Jump",
+							      		"RealDiv" : "Jump",
+							      		"Mul": "Jump"}):
+							y = tf.sign(outputs2)
+							outputs2 = tf.abs(outputs2)
+							outputs2 = tf.floor(outputs2 / min)
+							outputs2 = outputs2 * min
+							outputs2 = tf.clip_by_value(outputs2,0,tmp)
+							outputs2 = outputs2*y
+							#with G.gradient_override_map({"Identity" : "CustomGrad_for_conv_"+str(after)+"bit"}):
+							#    outputs = tf.identity(outputs)
+							outputs = tf.add(outputs, outputs2)
+							with G.gradient_override_map({"Round": "Identity",
+								      		"Minimum" : "Jump",
+								      		"Maximum" : "Jump",
+								      		"LessEqual" : "Jump",
+								      		"GreaterEqual" : "Jump",
+								      		"Select" : "Identity",
+								      		"Reshape" : "Identity",
+								      		"Sub": "Jump",
+								      		"Div": "Jump",
+								      		"Add": "Jump",
+								      		"Sign" : "Identity",
+								      		"Abs" : "Identity",
+								      		"Floor" : "Identity",
+								      		"Div" : "Jump",
+								      		"RealDiv" : "Jump",
+								      		"Mul": "Jump"}):
+								y = tf.sign(outputs)
+								outputs = tf.abs(outputs)
+								outputs = tf.floor(outputs / min)
+								outputs = outputs * min
+								outputs = tf.clip_by_value(outputs,0,tmp)
+								outputs = outputs*y
+								count+=1
+								
+								if(w_count==(kernel_size-1)):
+									h_count+=1
+									w_count=0
+									else:
+										w_count +=1	
+	#temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
+	shape3 = temp_input.get_shape().as_list()
 	shape1 = temp_out.get_shape().as_list()
 	grad_w = tf.zeros(shape1,tf.float32)
 
 	grad_w = grad_w + temp_out
-		
+	
 	grad_w = tf.transpose(grad_w, perm=[1,2,0,3])
 
 # 	kernel = op.inputs[1]	
