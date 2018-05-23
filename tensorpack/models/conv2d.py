@@ -345,11 +345,11 @@ def Conv2D_with_padding(op, grad):
 								outputs = outputs*y
 								count+=1
 								
-								if(w_count==(kernel_size-1)):
-									h_count+=1
-									w_count=0
-									else:
-										w_count +=1	
+		if(w_count==(kernel_size-1)):
+			h_count+=1
+			w_count=0
+		else:
+			w_count +=1	
 	#temp_out = tf.nn.conv2d(temp_input,temp_grad,strides,"VALID")
 	shape3 = temp_input.get_shape().as_list()
 	shape1 = temp_out.get_shape().as_list()
