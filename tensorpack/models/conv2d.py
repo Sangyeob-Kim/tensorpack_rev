@@ -376,54 +376,54 @@ def Conv2D(
         if get_tf_version_number() >= 1.5:
             kwargs['dilations'] = shape4d(dilation_rate, data_format=data_format)
        
-        before = 32
-        tmp = 0.0 
+#         before = 32
+#         tmp = 0.0 
 	
-        after2 = after
-        before = 32
-        tmp = 0.0 
-        after_div2=after/2
+#         after2 = after
+#         before = 32
+#         tmp = 0.0 
+#         after_div2=after/2
 	
-        for i in range(after2-1):
-            if(i-f_part<0):
-                tmp+= 1.0/np.power(2,-i+f_part)
-            else:
-                tmp+= np.power(2,i-f_part)
+#         for i in range(after2-1):
+#             if(i-f_part<0):
+#                 tmp+= 1.0/np.power(2,-i+f_part)
+#             else:
+#                 tmp+= np.power(2,i-f_part)
 
-        min = 1.0/np.power(2,f_part)
-        print(tmp)
-        print(min)
-        W = tf.get_variable(
-            'W', filter_shape2, initializer=kernel_initializer)
+#         min = 1.0/np.power(2,f_part)
+#         print(tmp)
+#         print(min)
+#         W = tf.get_variable(
+#             'W', filter_shape2, initializer=kernel_initializer)
 	
-        if use_bias:
-            b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
+#         if use_bias:
+#             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
 	
-        with G.gradient_override_map({"Round": "Identity",
-                        "Minimum" : "Jump",
-                        "Maximum" : "Jump",
-                        "LessEqual" : "Jump",
-                        "GreaterEqual" : "Jump",
-                        "Select" : "Identity",
-                        "Reshape" : "Identity",
-                        "Sub": "Jump",
-                        "Div": "Jump",
-                        "Add": "Jump",
-                        "Sign" : "Identity",
-                        "Abs" : "Identity",
-                        "Floor" : "Identity",
-                       	"Div" : "Jump",
-                       	"RealDiv" : "Jump",      
-                        "Mul": "Jump"}):
-            #inputs = tf.Print(inputs,[inputs[0]])
-            #tf.summary.histogram(inputs.name, inputs)
-            y = tf.sign(inputs)
-            inputs = tf.abs(inputs)
-            inputs = tf.floor(inputs / min)
-            inputs = inputs * (min)
-            inputs = tf.clip_by_value(inputs,0,tmp)
-            inputs = inputs*y
-            #inputs = tf.Print(inputs,[inputs[0]])
+#         with G.gradient_override_map({"Round": "Identity",
+#                         "Minimum" : "Jump",
+#                         "Maximum" : "Jump",
+#                         "LessEqual" : "Jump",
+#                         "GreaterEqual" : "Jump",
+#                         "Select" : "Identity",
+#                         "Reshape" : "Identity",
+#                         "Sub": "Jump",
+#                         "Div": "Jump",
+#                         "Add": "Jump",
+#                         "Sign" : "Identity",
+#                         "Abs" : "Identity",
+#                         "Floor" : "Identity",
+#                        	"Div" : "Jump",
+#                        	"RealDiv" : "Jump",      
+#                         "Mul": "Jump"}):
+#             #inputs = tf.Print(inputs,[inputs[0]])
+#             #tf.summary.histogram(inputs.name, inputs)
+#             y = tf.sign(inputs)
+#             inputs = tf.abs(inputs)
+#             inputs = tf.floor(inputs / min)
+#             inputs = inputs * (min)
+#             inputs = tf.clip_by_value(inputs,0,tmp)
+#             inputs = inputs*y
+#             #inputs = tf.Print(inputs,[inputs[0]])
 
 
         shape = inputs.shape
