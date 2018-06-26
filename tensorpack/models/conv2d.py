@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # File: conv2d.py
 
 
@@ -8,7 +7,7 @@ from .common import layer_register, VariableHolder
 from ..tfutils.common import get_tf_version_number
 from ..utils.argtools import shape2d, shape4d, get_data_format
 from .tflayer import rename_get_variable, convert_to_tflayer_args
-import numpy as np
+
 __all__ = ['Conv2D', 'Deconv2D', 'Conv2DTranspose']
 
 
@@ -61,7 +60,8 @@ def Conv2D(
                 bias_initializer=bias_initializer,
                 kernel_regularizer=kernel_regularizer,
                 bias_regularizer=bias_regularizer,
-                activity_regularizer=activity_regularizer)
+                activity_regularizer=activity_regularizer,
+                _reuse=tf.get_variable_scope().reuse)
             ret = layer.apply(inputs, scope=tf.get_variable_scope())
             ret = tf.identity(ret, name='output')
 
@@ -76,17 +76,17 @@ def Conv2D(
         channel_axis = 3 if data_format == 'NHWC' else 1
         in_channel = in_shape[channel_axis]
         assert in_channel is not None, "[Conv2D] Input cannot have unknown channel!"
-        #assert in_channel % split == 0
+        assert in_channel % split == 0
 
         assert kernel_regularizer is None and bias_regularizer is None and activity_regularizer is None, \
             "Not supported by group conv now!"
 
         out_channel = filters
-        #assert out_channel % split == 0
+        assert out_channel % split == 0
         assert dilation_rate == (1, 1) or get_tf_version_number() >= 1.5, 'TF>=1.5 required for group dilated conv'
 
         kernel_shape = shape2d(kernel_size)
-        filter_shape = kernel_shape + [in_channel, out_channel]
+        filter_shape = kernel_shape + [in_channel / split, out_channel]
         stride = shape4d(strides, data_format=data_format)
 
         kwargs = dict(data_format=data_format)
@@ -98,60 +98,12 @@ def Conv2D(
 
         if use_bias:
             b = tf.get_variable('b', [out_channel], initializer=bias_initializer)
-            
-        after = 32
-        before = 32
-        tmp = 0.0 
-        after_div2=after/2
-	
-        for i in range(after-1):
-	        if((i-after_div2)<0):
-		        tmp+= 1.0/np.power(2,-i+after_div2)
-	        else:
-		        tmp += np.power(2,i-after_div2)
-        max_range = tmp
-        min_range = -1.0*np.power(2,after_div2-1) 
-        range_T = np.power(2,after-1) * 2.0 - 1.0
-        range_T_add_1_div_2 = (range_T + 1.0)/2.0
-        range_target = max_range - min_range
-        range_div_range_T = range_target/range_T
-        one_over_range_div_range_T =1/ range_div_range_T
-  
-        #with g.gradient_override_map({"Round": "Identity"}), g.gradient_override_map({"Clip_by_value": "Identity"}):
-        #    inputs = tf.round((inputs - min_range) * (one_over_range_div_range_T) - range_T_add_1_div_2)
-        #    inputs = (inputs+range_T_add_1_div_2)
-        #    inputs = min_range+(inputs*range_div_range_T)
-        #   inputs = tf.clip_by_value(inputs,min_range,max_range)
-        
-        inputs = tf.split(inputs, in_channel, channel_axis)
-        #print(inputs)
-        kernels = W
-        #print("\nkernels1")
-        #print(kernels)
-        kernels = tf.transpose(kernels, perm=[0,1,3,2])
-        #print("\nkernels2")
-        #print(kernels)
-        kernels = tf.split(kernels, in_channel, 3)
-        #print("\nkernels3")
-        #print(kernels)
-        #print(kernels)
-        #outputs = [tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-                   #for i, k in zip(inputs, kernels)]
-        count = 0
-        
-        for i, k in zip(inputs, kernels):
-            if(count==0):
-                outputs = tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs)
-            else:
-                outputs = tf.add(outputs, tf.nn.conv2d(i, tf.transpose(k, perm=[0,1,3,2]), stride, padding.upper(), **kwargs))    
-            count+=1
-            
-        #print("\noutputs")
-        #print(outputs)
-        conv = outputs#tf.concat(outputs, channel_axis)
-        #conv = tf.reduce_sum(outputs,0)
-        #print("\nconv")
-        #print(conv)
+
+        inputs = tf.split(inputs, split, channel_axis)
+        kernels = tf.split(W, split, 3)
+        outputs = [tf.nn.conv2d(i, k, stride, padding.upper(), **kwargs)
+                   for i, k in zip(inputs, kernels)]
+        conv = tf.concat(outputs, channel_axis)
         if activation is None:
             activation = tf.identity
         ret = activation(tf.nn.bias_add(conv, b, data_format=data_format) if use_bias else conv, name='output')
@@ -207,13 +159,15 @@ def Conv2DTranspose(
             bias_initializer=bias_initializer,
             kernel_regularizer=kernel_regularizer,
             bias_regularizer=bias_regularizer,
-            activity_regularizer=activity_regularizer)
+            activity_regularizer=activity_regularizer,
+            _reuse=tf.get_variable_scope().reuse)
         ret = layer.apply(inputs, scope=tf.get_variable_scope())
+        ret = tf.identity(ret, name='output')
 
     ret.variables = VariableHolder(W=layer.kernel)
     if use_bias:
         ret.variables.b = layer.bias
-    return tf.identity(ret, name='output')
+    return ret
 
 
 Deconv2D = Conv2DTranspose
